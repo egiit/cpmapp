@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 import jwt_decode from 'jwt-decode';
@@ -11,23 +11,26 @@ export const AuthProvider = ({ children }) => {
   const [activeId, setActiveId] = useState('');
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
+  const [userDept, setuserDept] = useState('');
+
+  const refreshToken = async () => {
+    return await axios
+      .get(`/token`)
+      .then((response) => {
+        setToken(response.data.accessToken);
+        const decoded = jwt_decode(response.data.accessToken);
+        setActiveId(decoded.userId);
+        setActiveUser(decoded.username);
+        setExpire(decoded.exp);
+        setuserDept(decoded.userDept);
+        // console.log(decoded);
+      })
+      .catch((error) => {
+        if (error.response) return navigate('/');
+      });
+  };
 
   useEffect(() => {
-    const refreshToken = async () => {
-      return await axios
-        .get(`/token`)
-        .then((response) => {
-          // console.log(response.data.accessToken);
-          setToken(response.data.accessToken);
-          const decoded = jwt_decode(response.data.accessToken);
-          setActiveId(decoded.userId);
-          setActiveUser(decoded.username);
-          setExpire(decoded.exp);
-        })
-        .catch((error) => {
-          if (error.response) return navigate('/');
-        });
-    };
     refreshToken();
     chgangeBg();
   }, [navigate]);
@@ -37,6 +40,7 @@ export const AuthProvider = ({ children }) => {
     userId: activeId,
     username: activeUser,
     expire: expire,
+    userDept: userDept,
   };
 
   const chgangeBg = () => {
@@ -51,9 +55,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const initialState = { spin: false };
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'LAUNCH_LOADING':
+        return { spin: action.payload };
+      default:
+        return state;
+    }
+  };
+
+  const [loading, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <AuthContext.Provider value={{ value, loading, dispatch }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuth = () => {
-  return React.useContext(AuthContext);
-};
+// export const useLoading = () => {
+//   return React.useContext(AuthContext);
+// };

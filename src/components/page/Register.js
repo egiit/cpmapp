@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from '../axios/axios.js';
 import {
   Form,
@@ -15,8 +15,10 @@ import MenutAuth from './compRegister/MenutAuth.js';
 import ModalDelete from './compRegister/ModalDelete.js';
 import ModalSaveAccs from './compRegister/ModalSaveAccs.js';
 import { flash } from 'react-universal-flash';
+import { AuthContext } from '../auth/AuthProvider.js';
 
 const Register = () => {
+  const { dispatch } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [depts, setDepts] = useState([]);
   const [menus, setMenus] = useState([]);
@@ -74,6 +76,13 @@ const Register = () => {
   //   }
   // );
 
+  const loadingOn = () => {
+    dispatch({ type: 'LAUNCH_LOADING', payload: true });
+  };
+  const loadingOff = () => {
+    dispatch({ type: 'LAUNCH_LOADING', payload: false });
+  };
+
   const getUsers = async () => {
     const response = await axios.get('/user');
     // console.log(response.data);
@@ -91,6 +100,7 @@ const Register = () => {
   };
 
   const getMenuAccess = async (id) => {
+    loadingOn();
     const respons = await axios.get(`/useraccess/${id}`);
     // console.log(respons.data);
 
@@ -115,6 +125,7 @@ const Register = () => {
     setMenuAcces(respons.data);
     // console.log(arrUpdated);
     settabMenu(true);
+    loadingOff();
   };
 
   const resetForm = () => {
@@ -402,6 +413,7 @@ const Register = () => {
                                 type="checkbox"
                                 role="switch"
                                 id="flexSwitchCheckChecked"
+                                aria-checked
                                 checked={checked}
                                 value={active}
                                 onChange={onChangeActive}

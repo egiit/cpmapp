@@ -1,11 +1,14 @@
+import React from 'react';
+
 import { Navigate } from 'react-router-dom';
-import { useAuth } from './AuthProvider';
+// import { useAuth } from './AuthProvider';
 
 const ProtectedRouter = ({ children }) => {
-  const { token } = useAuth();
+  // const { token } = useAuth();
+  const token = true;
   // const location = useLocation();
   if (!token) {
-    return <Navigate to="/dashboards" />;
+    return <Navigate to="/" />;
   }
 
   return children;

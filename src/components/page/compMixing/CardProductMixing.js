@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Card, Nav } from 'react-bootstrap';
+import { MixingContex } from '../provider/Mixing.provider';
 
-const CardProductMixing = ({ productPlann, setProductName }) => {
+const CardProductMixing = ({ setProductName }) => {
+  const { mixerData } = useContext(MixingContex);
+
   return (
     <>
       <Card className="shadow border-0">
@@ -10,13 +13,14 @@ const CardProductMixing = ({ productPlann, setProductName }) => {
         </Card.Header>
         <Card.Body>
           <Nav variant="pills" className="flex-column">
-            {productPlann.map((product, index) => (
+            {mixerData.map((product, index) => (
               <Nav.Item key={index} className="border rounded mt-2 shadow-sm">
                 <Nav.Link
-                  onClick={() => setProductName(product.PRODUCT_NAME)}
-                  eventKey={product.PRODUCT_ID}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setProductName(product.product_name)}
+                  eventKey={product.product_id}
                 >
-                  {product.PRODUCT_NAME}
+                  {product.product_name}
                 </Nav.Link>
               </Nav.Item>
             ))}

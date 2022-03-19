@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Breadcrumb, Tab } from 'react-bootstrap';
 import HeaderFormMixing from './compMixing/HeaderFormMixing';
-import FooterFormMixing from './compMixing/FooterFormMixing';
-import CardDowntime from './compUtils/CardDowntime';
+// import FooterFormMixing from './compMixing/FooterFormMixing';
 import CardProductMixing from './compMixing/CardProductMixing';
-import TabContentMixing from './compMixing/TabContentMixing';
 import { MixingProvider } from './provider/Mixing.provider';
 
-const Mixing = () => {
+const MixingCheckListFormula = () => {
   const [productName, setProductName] = useState('Pilih Product');
 
   return (
@@ -18,7 +16,7 @@ const Mixing = () => {
           <h2 className="">Mixer</h2>
           <Breadcrumb>
             <Breadcrumb.Item href="" active>
-              Check List Mixer
+              Check List Formula Mixer
             </Breadcrumb.Item>
           </Breadcrumb>
         </div>
@@ -28,7 +26,7 @@ const Mixing = () => {
         <HeaderFormMixing />
 
         {/* for Footer */}
-        <FooterFormMixing />
+        {/* <FooterFormMixing /> */}
 
         {/* Row Input Mixing Batch */}
         <Row className="mt-3">
@@ -36,8 +34,6 @@ const Mixing = () => {
             <Col sm={3}>
               {/* Card Product List */}
               <CardProductMixing setProductName={setProductName} />
-              {/* Card DownTime */}
-              <CardDowntime />
             </Col>
             <Col sm={9}>
               <Card className="shadow border-0">
@@ -46,7 +42,6 @@ const Mixing = () => {
                     <h4 className="fw-bold fs-5">{productName}</h4>
                   </div>
                   {/* Container Tab */}
-                  <TabContentMixing />
                 </Card.Body>
               </Card>
             </Col>
@@ -57,4 +52,4 @@ const Mixing = () => {
   );
 };
 
-export default Mixing;
+export default MixingCheckListFormula;

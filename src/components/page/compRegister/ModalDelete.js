@@ -1,3 +1,4 @@
+import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { flash } from 'react-universal-flash';

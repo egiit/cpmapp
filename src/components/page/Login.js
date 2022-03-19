@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 import { Container, Card, Row, Col, Form, Button } from 'react-bootstrap';
 import axios from '../axios/axios.js';
 import logo from '../partial/cpmlogo.png';
+import jwtDecode from 'jwt-decode';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -12,17 +13,17 @@ const Login = () => {
   const navigate = useNavigate();
   // const location = useLocation();
 
-  // useEffect(() => {
-  //   const cekLogin = async () => {
-  //     return await axios
-  //       .get('/token')
-  //       .then((response) => navigate('/dashboards'))
-  //       .catch((error) => {
-  //         if (error.response) return '';
-  //       });
-  //   };
-  //   cekLogin();
-  // }, [navigate]);
+  useEffect(() => {
+    const cekLogin = async () => {
+      return await axios
+        .get('/token')
+        .then((response) => navigate('/dashboards'))
+        .catch((error) => {
+          if (error.response) return '';
+        });
+    };
+    cekLogin();
+  }, [navigate]);
 
   const onChangeUsername = (e) => {
     const value = e.target.value;
@@ -37,11 +38,16 @@ const Login = () => {
   const Auth = async (e) => {
     try {
       e.preventDefault();
-      await axios.post('/login', {
-        USER_NAME: username,
-        USER_PASS: password,
-      });
-      navigate('/dashboards');
+      await axios
+        .post('/login', {
+          USER_NAME: username,
+          USER_PASS: password,
+        })
+        .then((response) => {
+          const decode = jwtDecode(response.data.accessToken);
+          if (decode.userLevel === 'ADM') return navigate('/headerform');
+          navigate('/dashboards');
+        });
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.message);

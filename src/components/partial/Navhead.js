@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from '../axios/axios.js';
 import { flash } from 'react-universal-flash';
-import { useAuth } from '../auth/AuthProvider';
+import { AuthContext } from '../auth/AuthProvider';
 
 const Navhead = () => {
-  const { username } = useAuth();
+  const { value } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const sidebarToggle = () => {
@@ -54,7 +54,9 @@ const Navhead = () => {
               }
               id="collasible-nav-dropdown"
             >
-              <NavDropdown.Item href="#action/3.1">{username}</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.1">
+                {value.username}
+              </NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Another action
               </NavDropdown.Item>

@@ -4,6 +4,7 @@ import { Message } from '../page/Message';
 import Navhead from '../partial/Navhead';
 import Sidebar from '../partial/Sidebar';
 import { Flasher } from 'react-universal-flash';
+import Spinner from '../partial/spinner/Spinner.js';
 
 function MainRoute() {
   const styleContentN = {
@@ -27,6 +28,7 @@ function MainRoute() {
           <Flasher position="bottom_right">
             <Message />
           </Flasher>
+          <Spinner />
           <Outlet />
         </div>
       </div>

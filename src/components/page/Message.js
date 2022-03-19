@@ -1,3 +1,5 @@
+import React from 'react';
+
 // import { Flasher } from 'react-universal-flash';
 import { Alert } from 'react-bootstrap';
 

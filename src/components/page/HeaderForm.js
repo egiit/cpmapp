@@ -10,7 +10,7 @@ import {
   Form,
   Button,
 } from 'react-bootstrap';
-import TagsInput from 'taginput-react';
+// import TagsInput from 'taginput-react';
 import { AuthContext } from '../auth/AuthProvider';
 import GetDate from './utilis/GetDate';
 
@@ -21,29 +21,24 @@ const HeaderForm = () => {
 
   const { value } = useContext(AuthContext);
   const [shift, setShift] = useState('');
-  const [operator, setOperator] = useState([]);
+  const [operator, setOperator] = useState('');
   const [leader, setLeader] = useState('');
   const [deptName, setdeptName] = useState('');
   const [validated, setValidated] = useState(false);
-  const [notifOpNull, setnotifOpNull] = useState('');
   const tanggal = GetDate();
-  const [urlPush, seturlPush] = useState('/header');
+  const [headerId, setHeaderId] = useState(null);
 
   useEffect(() => {
     const getHeader = async () => {
       await axios
         .get(`header/${value.userId}/${tanggal}`)
         .then((response) => {
-          seturlPush(`/header/${response.data.header_id}`);
-          const arrOperator = response.data.header_operator.split(',');
-          setShift(response.data.header_shift);
-          setOperator(arrOperator);
-          setLeader(response.data.header_leader);
-          // axios
-          //   .get(`/header/${response.data.header_id}`)
-          //   .then((response) => {
-
-          //   });
+          if (response.data.length !== 0) {
+            setHeaderId(response.data.header_id);
+            setShift(response.data.header_shift);
+            setOperator(response.data.header_operator);
+            setLeader(response.data.header_leader);
+          }
         })
         .catch((error) => {
           console.log('Error Dapatkan Data Shift Header');
@@ -57,22 +52,22 @@ const HeaderForm = () => {
       await axios
         .get(`/dept/${value.userDept}`)
         .then((response) => {
-          // console.log(response.data.DEP_NAME);
           setdeptName(response.data.DEP_NAME);
         })
         .catch((error) => console.log(error));
     };
     getDept();
-  }, [value, pathName, tanggal]);
+  }, [value.userId, value.userDept, pathName, tanggal]);
 
   // handel input
   const onChangeShit = (e) => {
     const value = e.target.value;
     setShift(value);
   };
-  const onChangeOperator = (data) => {
-    setOperator(data);
-    setnotifOpNull('');
+
+  const onChangeOperator = (e) => {
+    const value = e.target.value;
+    setOperator(value);
   };
   const onChangeLeader = (e) => {
     const value = e.target.value;
@@ -82,37 +77,35 @@ const HeaderForm = () => {
   const resetForm = () => {
     setShift('');
     setOperator([]);
-    onChangeOperator([]);
     setLeader('');
     setValidated(false);
+    setHeaderId(null);
   };
 
   //handle Submit Create Header
   const onSubmitHeader = async (e) => {
     const form = e.target.parentElement;
 
-    if (form.checkValidity() === false || operator.length < 1) {
-      setnotifOpNull('Mohon Isi Operator');
+    if (form.checkValidity() === false) {
       e.preventDefault();
       e.stopPropagation();
       setValidated(true);
     } else {
       try {
         e.preventDefault();
-        const opt = operator.toString();
+        e.stopPropagation();
         const dataHeader = {
+          header_id: headerId,
           header_prod_date: tanggal,
           header_shift: shift,
-          header_operator: opt,
+          header_operator: operator,
           header_leader: leader,
           header_dept_id: value.userDept,
           header_add_id: value.userId,
+          header_mod_id: value.userId,
         };
-        if (pathName === '/headerform/edit') {
-          await axios.patch(urlPush, dataHeader);
-        } else {
-          await axios.post('/header', dataHeader);
-        }
+        await axios.post('/header', dataHeader);
+        // .then((response) => console.log(response));
         resetForm();
         navigate(`/${deptName}`);
       } catch (error) {
@@ -174,12 +167,12 @@ const HeaderForm = () => {
                       Operator
                     </Form.Label>
                     <Col sm={9}>
-                      <TagsInput
+                      <Form.Control
+                        size="sm"
+                        type="text"
                         required
-                        // value={operator}
-                        tags={operator}
+                        value={operator}
                         onChange={onChangeOperator}
-                        placeholder="Tekan Enter Untuk Tambah"
                       />
                     </Col>
                   </Form.Group>
@@ -197,11 +190,11 @@ const HeaderForm = () => {
                       />
                     </Col>
                   </Form.Group>
-                  <Row>
+                  {/* <Row>
                     <Col className="offset-3 fs-6 fst-italic text-danger">
                       {notifOpNull}
                     </Col>
-                  </Row>
+                  </Row> */}
                   <Button size="sm" variant="primary" onClick={onSubmitHeader}>
                     Save Header
                   </Button>

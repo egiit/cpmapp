@@ -24,6 +24,7 @@ const ModalDowntime = ({
   const [typeDown, settypeDown] = useState('');
   const [remarkDown, setremarkDown] = useState('');
   const [messageState, setMessageSate] = useState('');
+  const [validated, setValidated] = useState(false);
 
   useEffect(() => {
     if (editStatus) {
@@ -84,35 +85,41 @@ const ModalDowntime = ({
   };
 
   const handleSubmi = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    const form = e.currentTarget;
 
-    if (endTime !== '00:00:00') {
-      return setMessageSate('Tidak Bisa Update, Downtime Sudah Berstatus Fix');
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      setValidated(true);
+    } else {
+      if (endTime !== '00:00:00') {
+        return setMessageSate(
+          'Tidak Bisa Update, Downtime Sudah Berstatus Fix'
+        );
+      }
+
+      const dataDowntime = {
+        downtime_id: downtimeId,
+        downtime_dept_id: header.header_dept_id,
+        header_id: header.header_id,
+        product_id: productId,
+        batch_regis_id: batchId,
+        downtime_type: typeDown,
+        downtime_start: startTime,
+        downtime_add_remark: remarkDown,
+        downtime_add_id: header.header_add_id,
+      };
+
+      await axios
+        .post('/downtime', dataDowntime)
+        .then((response) => flash(response.data.message, 5000, 'success'))
+        .catch((error) => {
+          flash(error.message, 5000, 'danger');
+        });
+      getDowntime();
+      handleClose();
     }
-
-    const dataDowntime = {
-      downtime_id: downtimeId,
-      downtime_dept_id: header.header_dept_id,
-      header_id: header.header_id,
-      product_id: productId,
-      batch_regis_id: batchId,
-      downtime_type: typeDown,
-      downtime_start: startTime,
-      downtime_add_remark: remarkDown,
-      downtime_add_id: header.header_add_id,
-    };
-
-    await axios
-      .post('/downtime', dataDowntime)
-      .then((response) => flash(response.data.message, 5000, 'success'))
-      .catch((error) => {
-        flash(error.message, 5000, 'danger');
-      });
-    getDowntime();
-    handleClose();
   };
-
   const handleDelete = async () => {
     if (endTime !== '00:00:00') {
       return setMessageSate('Tidak Bisa Dihapus, Downtime Sudah Berstatus Fix');
@@ -139,7 +146,7 @@ const ModalDowntime = ({
         backdrop="static"
         keyboard={false}
       >
-        <Form onSubmit={handleSubmi}>
+        <Form onSubmit={handleSubmi} noValidate validated={validated}>
           <Modal.Header closeButton>
             <Modal.Title>Downtime Form</Modal.Title>
           </Modal.Header>

@@ -20,7 +20,7 @@ const Navhead = () => {
   const logout = async () => {
     await axios
       .delete('/logout')
-      .then((response) => navigate('/'))
+      .then(() => navigate('/'))
       .catch((error) => flash('Something Wrong', 5000, 'danger'));
   };
 

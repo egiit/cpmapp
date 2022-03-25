@@ -4,9 +4,18 @@ import HeaderFormMixing from './compMixing/HeaderFormMixing';
 // import FooterFormMixing from './compMixing/FooterFormMixing';
 import CardProductMixing from './compMixing/CardProductMixing';
 import { MixingProvider } from './provider/Mixing.provider';
+import ContentFrmlCheck from './compMixing/ContentFrmlCheck';
 
 const MixingCheckListFormula = () => {
   const [productName, setProductName] = useState('Pilih Product');
+  const [prodId, setprodId] = useState(null);
+  // const [showModal, setshowModal] = useState(false);
+
+  const handleChangeProduct = (name, id) => {
+    setProductName(name);
+    setprodId(id);
+    // console.log(id);
+  };
 
   return (
     // title Page
@@ -33,7 +42,7 @@ const MixingCheckListFormula = () => {
           <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Col sm={3}>
               {/* Card Product List */}
-              <CardProductMixing setProductName={setProductName} />
+              <CardProductMixing setProductName={handleChangeProduct} />
             </Col>
             <Col sm={9}>
               <Card className="shadow border-0">
@@ -42,6 +51,7 @@ const MixingCheckListFormula = () => {
                     <h4 className="fw-bold fs-5">{productName}</h4>
                   </div>
                   {/* Container Tab */}
+                  <ContentFrmlCheck idProd={prodId} />
                 </Card.Body>
               </Card>
             </Col>

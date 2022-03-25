@@ -17,7 +17,9 @@ const CardProductMixing = ({ setProductName }) => {
               <Nav.Item key={index} className="border rounded mt-2 shadow-sm">
                 <Nav.Link
                   style={{ cursor: 'pointer' }}
-                  onClick={() => setProductName(product.product_name)}
+                  onClick={() =>
+                    setProductName(product.product_name, product.product_id)
+                  }
                   eventKey={product.product_id}
                 >
                   {product.product_name}

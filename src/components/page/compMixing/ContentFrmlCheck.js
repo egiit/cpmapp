@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MixingContex } from '../provider/Mixing.provider';
-import { Tab, Button, Table } from 'react-bootstrap';
+import { Tab, Button, Table, Row, Col } from 'react-bootstrap';
 import ModelMixFrmlCheck from './ModelMixFrmlCheck';
 import axios from '../../axios/axios';
 import { flash } from 'react-universal-flash';
+import ModelRemarkFrml from './ModelRemarkFrml';
 
 function ContentFrmlCheck({ idProd }) {
   const { mixerData, header, batchData } = useContext(MixingContex);
   const [showModal, setshowModal] = useState(false);
+  const [showModalRemark, setshowModalRemark] = useState(false);
   // const [prodId, setProdId] = useState(idProd);
   const [mixFrmlCheck, setmixFrmlCheck] = useState([]);
   const [mixFrmlCheckVal, setmixFrmlCheckVal] = useState([]);
@@ -43,23 +45,6 @@ function ContentFrmlCheck({ idProd }) {
         setmixFrmlCheckVal(response.data);
       });
   };
-
-  // const getFormMixervalue = async () => {
-  //   await axios //fetch data ke API ambil data value
-  //     .get(`/mixer/frmla-params/value/${header.header_id}/${idProd}`)
-  //     .then((response) => {
-  //       const dataBtch = batchData
-  //         .filter((plan) => plan.product_id === idProd)
-  //         .map((batch) => {
-  //           return response.data.filter(
-  //             (check) => check.batch_regis_id === batch.batch_regis_id
-  //           );
-  //         });
-  //       console.log(dataBtch);
-  //       // setInputList(response.data);
-  //       // setmixFrmlCheckVal(response.data);
-  //     });
-  // };
 
   const filterbatchData = () => {
     const batch = batchData.filter((plan) => plan.product_id === idProd);
@@ -100,8 +85,8 @@ function ContentFrmlCheck({ idProd }) {
         await axios.post('/mixer/frmla-params/value', dataInput);
         inputLength++;
 
-        if (inputLength === inputLength.length) {
-          flash('Parameter Bahan Baku Updated', 5000, 'success');
+        if (inputLength === inputList.length) {
+          flash('Success Data Saved', 5000, 'success');
           setInputList([]);
         }
       });
@@ -115,15 +100,22 @@ function ContentFrmlCheck({ idProd }) {
       <Tab.Content>
         {/* {JSON.stringify(inputList)} */}
 
-        {mixerData.map((product, index) => (
+        {mixerData.map((
+          product,
+          index //looping tab untuk product
+        ) => (
           <Tab.Pane key={index} eventKey={product.product_id}>
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={() => setshowModal(true)}
-            >
-              Edit Parameter
-            </Button>
+            <Row className="justify-content-end">
+              <Col md={2} className="text-end">
+                <Button
+                  size="sm"
+                  variant="primary"
+                  onClick={() => setshowModal(true)}
+                >
+                  Edit Parameter
+                </Button>
+              </Col>
+            </Row>
 
             <div className="mt-2">
               <Table striped size="sm" bordered responsive hover>
@@ -143,66 +135,93 @@ function ContentFrmlCheck({ idProd }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {mixFrmlCheck.map((list, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>
-                        {list.standar_form_param}
-                        <span> </span>
-                        {list.mixer_frml_params}
-                      </td>
-                      {lengthBatch.map((batch, index) => (
-                        <td className="text-center" key={index}>
-                          {mixFrmlCheckVal.some(
-                            (check) =>
-                              check.mixer_frml_id === list.mixer_frml_id &&
-                              check.batch_regis_id === batch.batch_regis_id
-                          ) ? (
-                            mixFrmlCheckVal
-                              .filter(
-                                (check) =>
-                                  check.mixer_frml_id === list.mixer_frml_id &&
-                                  check.batch_regis_id === batch.batch_regis_id
-                              )
-                              .map((data, idx) => (
-                                <input
-                                  key={idx}
-                                  className="form-check-input"
-                                  onChange={handleInput}
-                                  name={batch.batch_regis_id}
-                                  id={list.mixer_frml_id}
-                                  disabled={
-                                    !list.mixer_frml_params ? true : false
-                                  }
-                                  defaultChecked={
-                                    data.mixer_frml_value === 1 ? true : false
-                                  }
-                                  type="checkbox"
-                                ></input>
-                              ))
-                          ) : (
-                            <input
-                              // key={idx}
-                              className="form-check-input"
-                              onChange={handleInput}
-                              name={batch.batch_regis_id}
-                              id={list.mixer_frml_id}
-                              disabled={!list.mixer_frml_params ? true : false}
-                              type="checkbox"
-                            ></input>
-                          )}
+                  {mixFrmlCheck //filter kecuali remark dan looping nama bahan
+                    .filter((datCheck) => datCheck.standar_form_id !== 49)
+                    .map((list, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>
+                          {list.standar_form_param}
+                          <span> </span>
+                          {list.mixer_frml_params}
                         </td>
-                      ))}
-                      <td></td>
-                    </tr>
-                  ))}
+                        {lengthBatch.map((
+                          batch,
+                          index //looping jumlah colom batch
+                        ) => (
+                          <td className="text-center" key={index}>
+                            {mixFrmlCheckVal.some(
+                              //looping tanya ada isinya
+                              (check) =>
+                                check.mixer_frml_id === list.mixer_frml_id &&
+                                check.batch_regis_id === batch.batch_regis_id
+                            ) ? (
+                              mixFrmlCheckVal //jika ada maka filter
+                                .filter(
+                                  (check) =>
+                                    check.mixer_frml_id ===
+                                      list.mixer_frml_id &&
+                                    check.batch_regis_id ===
+                                      batch.batch_regis_id
+                                )
+                                .map((
+                                  data,
+                                  idx //looping  datanya dan masukan default checked
+                                ) => (
+                                  <input
+                                    key={idx}
+                                    className="form-check-input"
+                                    onChange={handleInput}
+                                    name={batch.batch_regis_id}
+                                    id={list.mixer_frml_id}
+                                    disabled={
+                                      !list.mixer_frml_params ? true : false
+                                    }
+                                    defaultChecked={
+                                      data.mixer_frml_value === 1 ? true : false
+                                    }
+                                    type="checkbox"
+                                  ></input>
+                                ))
+                            ) : (
+                              <input
+                                // key={idx}
+                                className="form-check-input"
+                                onChange={handleInput}
+                                name={batch.batch_regis_id}
+                                id={list.mixer_frml_id}
+                                disabled={
+                                  !list.mixer_frml_params ? true : false
+                                }
+                                type="checkbox"
+                              ></input>
+                            )}
+                          </td>
+                        ))}
+                        <td></td>
+                      </tr>
+                    ))}
                 </tbody>
               </Table>
-              <div>
-                <Button variant="primary" onClick={handleSubmit}>
-                  Save
-                </Button>
-              </div>
+              <Row className="justify-content-end">
+                <Col md={3} className="text-end">
+                  <Button
+                    size="sm"
+                    variant="warning"
+                    onClick={() => setshowModalRemark(true)}
+                  >
+                    Add remark
+                  </Button>
+                  <Button
+                    className="ms-2"
+                    size="sm"
+                    variant="primary"
+                    onClick={handleSubmit}
+                  >
+                    Save
+                  </Button>
+                </Col>
+              </Row>
             </div>
           </Tab.Pane>
         ))}
@@ -212,8 +231,20 @@ function ContentFrmlCheck({ idProd }) {
             prodId={idProd}
             mixFrmlCheck={mixFrmlCheck}
             getForm={() => getFormMixerChecklist()}
-            confirmNext={() => console.log('cdk')}
             cancleModal={() => setshowModal(false)}
+          />
+        ) : (
+          ''
+        )}
+        {showModalRemark ? (
+          <ModelRemarkFrml
+            setshowModalRemark={setshowModalRemark}
+            prodId={idProd}
+            mixFrmlCheck={mixFrmlCheck}
+            headers={header}
+            // getForm={() => getFormMixerChecklist()}
+            // confirmNext={() => console.log('cdk')}
+            cancleModal={() => setshowModalRemark(false)}
           />
         ) : (
           ''

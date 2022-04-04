@@ -9,9 +9,10 @@ import Dashboard from './components/page/Dashboard';
 import NotFound from './components/page/NotFound';
 import Mixing from './components/page/Mixing';
 import ProtectedRouter from './components/auth/ProtectedRouter';
-import MixingDayReport from './components/page/reports/MixingDayReport';
+import MixingDayReport from './components/page/compMixing/MixingDayReport';
 import HeaderForm from './components/page/HeaderForm';
 import MixingCheckListFormula from './components/page/MixingCheckListFormula';
+
 // import { useAuth } from './components/auth/AuthProvider';
 // export const AuthContext = createContext(null);
 

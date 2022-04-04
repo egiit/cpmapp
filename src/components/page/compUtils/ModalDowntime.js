@@ -84,7 +84,7 @@ const ModalDowntime = ({
     }
   };
 
-  const handleSubmi = async (e) => {
+  const handleSubmit = async (e) => {
     const form = e.currentTarget;
 
     if (form.checkValidity() === false) {
@@ -92,7 +92,9 @@ const ModalDowntime = ({
       e.stopPropagation();
       setValidated(true);
     } else {
-      if (endTime !== '00:00:00') {
+      e.preventDefault();
+
+      if (!endTime) {
         return setMessageSate(
           'Tidak Bisa Update, Downtime Sudah Berstatus Fix'
         );
@@ -106,6 +108,7 @@ const ModalDowntime = ({
         batch_regis_id: batchId,
         downtime_type: typeDown,
         downtime_start: startTime,
+        downtime_end: startTime,
         downtime_add_remark: remarkDown,
         downtime_add_id: header.header_add_id,
       };
@@ -120,6 +123,7 @@ const ModalDowntime = ({
       handleClose();
     }
   };
+
   const handleDelete = async () => {
     if (endTime !== '00:00:00') {
       return setMessageSate('Tidak Bisa Dihapus, Downtime Sudah Berstatus Fix');
@@ -146,7 +150,7 @@ const ModalDowntime = ({
         backdrop="static"
         keyboard={false}
       >
-        <Form onSubmit={handleSubmi} noValidate validated={validated}>
+        <Form onSubmit={handleSubmit} noValidate validated={validated}>
           <Modal.Header closeButton>
             <Modal.Title>Downtime Form</Modal.Title>
           </Modal.Header>
@@ -202,7 +206,7 @@ const ModalDowntime = ({
                 )}
                 {filterBatch.map((data, i) => (
                   <option key={i} value={data.batch_regis_id}>
-                    Batch{data.batch_regis_id}
+                    Batch{i + 1}
                   </option>
                 ))}
               </Form.Select>
@@ -266,7 +270,7 @@ const ModalDowntime = ({
               Cancel
             </Button>
             <Button size="sm" variant="success" type="submit">
-              {editStatus ? 'Update' : 'Save'}
+              {/* {editStatus ? 'Update' : 'Save'} */}save
             </Button>
           </Modal.Footer>
         </Form>

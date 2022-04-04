@@ -5,8 +5,14 @@ import { Col, Card } from 'react-bootstrap';
 const ChartDashboard = () => {
   const series = [
     {
-      name: 'FG',
+      name: 'Malkitis Lemon',
       data: [65, 59, 80, 81, 56, 55, 45, 65, 85, 83, 80, 85, 65, 87],
+      id: 1,
+    },
+    {
+      name: 'Malkitis Gula',
+      data: [null, null, null, 87, 55, 65, 67, 85, 83, 80, 85, 65, 87],
+      id: 2,
     },
   ];
 

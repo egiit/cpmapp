@@ -42,9 +42,9 @@ const CardDowntime = () => {
   };
 
   // interval for check fix downtime
-  setInterval(function() {
-    getDowntime();
-  }, 300000);
+  // setInterval(function() {
+  //   getDowntime();
+  // }, 300000);
 
   return (
     <>

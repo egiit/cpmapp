@@ -5,18 +5,15 @@ import { Row, Col, Card, Form, Tab, Tabs, Button } from 'react-bootstrap';
 import ModelConfrmTab from './ModelConfrmTab';
 import ModelRemark from './ModelRemark';
 import { flash } from 'react-universal-flash';
-import GetDate from '../utilis/GetDate';
 
 const TabContentMixing = () => {
   const { mixerData, batchData, header, refreshBatc } = useContext(
     MixingContex
   );
 
-  const currentDate = GetDate();
   const [key, setKey] = useState(''); //state batch regis id
   const [confmkey, setconfmkey] = useState(''); //state batch regis id jika tab di klik
   const [inputList, setInputList] = useState([]); //state jika user isi form
-  const [compareList, setcompareList] = useState([]); //state jika pindah tab
   const [dataForm, setDataForm] = useState([]); //form params dan value
   const [modalConfirm, setmodalConfirm] = useState(false); //modal confirm pindah tab
   const [modConfrmTsfr, setmodConfrmTsfr] = useState(false); //modal confirm transfer
@@ -25,65 +22,14 @@ const TabContentMixing = () => {
 
   // handle input change
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
     const lists = [...inputList];
+    const { name, value } = e.target;
     const index = lists.findIndex((list) => list.params === name);
     index !== -1
       ? (lists[index] = { params: name, valuePar: value })
       : lists.push({ params: name, valuePar: value });
     setInputList(lists);
-
-    const idEndTime = [10, 6, 20];
-    if (idEndTime.find((el) => el === parseInt(name))) {
-      switch (parseInt(name)) {
-        case 6:
-          funcJmlhTime('5', '4', value, '6');
-          break;
-        case 10:
-          funcJmlhTime('9', '8', value, '10');
-          break;
-        case 20:
-          funcJmlhTime('19', '12', value, '20');
-          break;
-        default:
-          break;
-      }
-    }
   };
-
-  //function input list normal
-
-  // Function untuk kurangi jam mulai jam akhir proccess mixer
-
-  const funcJmlhTime = (start, idSparator, valEnd, idEnd) => {
-    const lists = [...inputList]; //masukan list
-    const idxStart = lists.findIndex((list) => list.params === start); //cari index start
-    const idxEnd = lists.findIndex((list) => list.params === idEnd); //cari index end
-    const index = lists.findIndex((list) => list.params === idSparator); //cari index idsparator
-    var nilValue = '00:00';
-
-    if (lists[idxStart] !== null) {
-      //jika nilainya tidak null maka kurangi nilai end oleh nilai start
-      nilValue = minsToStr(
-        strToMins(valEnd) - strToMins(lists[idxStart].valuePar)
-      );
-    }
-
-    lists[index] = { params: idSparator.toString(), valuePar: nilValue };
-    lists[idxEnd] = { params: idEnd, valuePar: valEnd };
-
-    setInputList(lists);
-  };
-
-  function strToMins(t) {
-    var s = t.split(':');
-    return Number(s[0]) * 60 + Number(s[1]);
-  }
-
-  function minsToStr(t) {
-    return Math.trunc(t / 60) + ':' + ('00' + (t % 60)).slice(-2);
-  }
-  // END Function untuk kurangi jam mulai jam akhir proccess mixer
 
   // handle Submit
   const submitForm = (e) => {
@@ -98,10 +44,6 @@ const TabContentMixing = () => {
       header_id: header.header_id,
       batch_regis_id: batchId,
       transfer_flagh: statTfr,
-      transfer_time:
-        statTfr !== 'Y'
-          ? null
-          : Date().toLocaleString('id-ID', { timeZone: 'UTC' }),
       mixer_proc_chek_date: header.header_prod_date,
       mixer_proc_chek_shift: header.header_shift,
     };
@@ -110,28 +52,14 @@ const TabContentMixing = () => {
       .post('/mixer/batch/procheck', dataProCheck)
       .then((response) => {
         const checkId = response.data.data.mixer_proc_chek_id;
-        inputList
-          .filter((lilstK) => lilstK.valuePar !== null)
-          .forEach((list) => {
-            const dataCheck = {
-              mixer_proc_check_id: checkId,
-              standar_form_id: list.params,
-              standar_form_value: list.valuePar,
-            };
-            axios.post('/mixer/batch/checklist', dataCheck);
-            if (list.params === '3') {
-              axios.patch(`/formula/${batchId}`, {
-                batch_regis_start_time: `${currentDate} ${list.valuePar}:00`,
-              });
-              // console.log(`${currentDate} ${list.valuePar}:00`);
-            }
-            if (list.params === '21') {
-              // console.log(`${currentDate} ${list.valuePar}:00`);
-              axios.patch(`/formula/${batchId}`, {
-                batch_regis_end_time: `${currentDate} ${list.valuePar}:00`,
-              });
-            }
-          });
+        inputList.forEach((list) => {
+          const dataCheck = {
+            mixer_proc_check_id: checkId,
+            standar_form_id: list.params,
+            standar_form_value: list.valuePar,
+          };
+          axios.post('/mixer/batch/checklist', dataCheck);
+        });
         flash('Data Saved', 5000, 'success');
         setInputList([]);
       })
@@ -150,24 +78,14 @@ const TabContentMixing = () => {
       .get(`/mixer/batch/MIXER/${bRegId}`)
       .then((response) => {
         // console.log(response.data);
-        const list = [];
-        response.data.forEach((data) => {
-          list.push({
-            params: data.standar_form_id.toString(),
-            valuePar: data.standar_form_value,
-          });
-        });
         setDataForm(response.data);
-        setInputList(list);
-        setcompareList(list);
       })
       .catch((error) => console.log(error));
   };
 
   // handle tabs yang
   const handleTabs = (k) => {
-    const difference = getDifference(inputList, compareList);
-    if (difference.length !== 0) {
+    if (inputList.length !== 0) {
       // jika ada input tanya dulu aktifkan modal confirm
       setmodalConfirm(true);
       // masukan next key tab
@@ -176,14 +94,6 @@ const TabContentMixing = () => {
       // jika kosong input maka direct langsung
       getFormValue(k);
     }
-  };
-
-  const getDifference = (array1, array2) => {
-    return array1.filter((object1) => {
-      return !array2.some((object2) => {
-        return object1.valuePar === object2.valuePar;
-      });
-    });
   };
 
   // function confirm modal tab
@@ -206,13 +116,11 @@ const TabContentMixing = () => {
   // function save and transfer
   const saveAndTransfer = async (batchReg) => {
     handleProcCheck(batchReg, 'Y');
-    const dataTrans = {
-      batch_regis_prod_flag: 'Y',
-      batch_regis_transfer_time: new Date(),
-    };
-    await axios.patch(`/formula/${batchReg}`, dataTrans).then((response) => {
-      flash(response.data.meesage, 5000, 'success');
-    });
+    await axios
+      .patch(`/formula/${batchReg}`, { batch_regis_prod_flag: 'Y' })
+      .then((response) => {
+        flash(response.data.meesage, 5000, 'success');
+      });
   };
 
   // function jika confirm transfer
@@ -304,11 +212,6 @@ const TabContentMixing = () => {
                             <Row className="mb-3">
                               <Card>
                                 <Card.Body>
-                                  <Row className="mb-2">
-                                    <Col className="fw-bold">
-                                      Persiapan & Mulai Mixing
-                                    </Col>
-                                  </Row>
                                   {dataForm
                                     .filter(
                                       (formPre) =>
@@ -328,10 +231,6 @@ const TabContentMixing = () => {
                                           maxLength={3}
                                           min={0}
                                           max={100}
-                                          step="any"
-                                          placeholder={
-                                            pre.standar_form_initials
-                                          }
                                           size="sm"
                                           required
                                           disabled={
@@ -351,9 +250,6 @@ const TabContentMixing = () => {
                             <Row>
                               <Card>
                                 <Card.Body>
-                                  <Row className="mb-2">
-                                    <Col className="fw-bold">Tahapan Mixer</Col>
-                                  </Row>
                                   {dataForm
                                     .filter(
                                       (formProc) =>
@@ -413,9 +309,6 @@ const TabContentMixing = () => {
                           <Col>
                             <Card>
                               <Card.Body>
-                                <Row className="mb-2">
-                                  <Col className="fw-bold">Input Tambahan</Col>
-                                </Row>
                                 {dataForm
                                   .filter(
                                     (formPre) =>
@@ -433,10 +326,6 @@ const TabContentMixing = () => {
                                       <Form.Control
                                         type={after.standar_form_tipe}
                                         size="sm"
-                                        step="any"
-                                        placeholder={
-                                          after.standar_form_initials
-                                        }
                                         disabled={
                                           batch.batch_regis_prod_flag === 'Y'
                                             ? true

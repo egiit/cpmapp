@@ -33,7 +33,7 @@ const FooterFormMixing = () => {
               </div>
               <div className="btn fw-bold btn-warning btn-sm">
                 Runing Batch :{' '}
-                {finishBatch !== totalBatch ? totalBatch + 1 : finishBatch}
+                {finishBatch !== totalBatch ? finishBatch + 1 : totalBatch}
               </div>
             </Card.Body>
           </Card>

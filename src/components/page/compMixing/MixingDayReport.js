@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import {
   Container,
@@ -17,9 +17,12 @@ import axios from '../../axios/axios';
 import LineChart from '../apexChart/LineChart';
 import MixingBatchReport from './MixingBatchReport';
 import MixingProdReport from './MixingProdReport';
+import { AuthContext } from '../../auth/AuthProvider';
 // import moment from 'moment';
 
 const MixingDayReport = () => {
+  const { dispatch } = useContext(AuthContext);
+
   const [date, setDate] = useState(GetDate());
   const [dataChart, setDataChart] = useState([]);
   const [sequenBatch, setsequenBatch] = useState([]);
@@ -31,6 +34,13 @@ const MixingDayReport = () => {
   const [productListId, setPoruductListid] = useState([]);
   const [masterValue, setMasterValue] = useState([]);
   const [standarForm, setStandarForm] = useState([]);
+
+  const loadingOn = () => {
+    dispatch({ type: 'LAUNCH_LOADING', payload: true });
+  };
+  const loadingOff = () => {
+    dispatch({ type: 'LAUNCH_LOADING', payload: false });
+  };
 
   const changeDate = (e) => {
     const { value } = e.target;
@@ -81,18 +91,9 @@ const MixingDayReport = () => {
             ...new Set(res.data.map((x) => x.mixer_proc_chek_shift)), //disitng shift
           ];
 
-          // const valueProduct = [
-          //   ...new Map(
-          //     res.data.map((item) => [item['mixer_proc_chek_shift'], item])
-          //   ).values(), //disitng shift
-          // ];
-
           if (shft === '') {
             setListShift(valueShift);
           }
-
-          // console.log(valueProduct);
-          // setPoruductListid(valueProduct);
         });
     } catch (error) {
       console.log(error);
@@ -101,6 +102,7 @@ const MixingDayReport = () => {
 
   const getProductChart = async (tgl, shft, prod) => {
     try {
+      loadingOn();
       await axios
         .get(`/mixer/report/product/${tgl}/%25${shft}%25/${prod}%25`)
         .then((response) => {
@@ -116,6 +118,7 @@ const MixingDayReport = () => {
             setListProduct(response.data);
           }
         });
+      loadingOff();
     } catch (error) {
       console.log(error);
     }
@@ -211,7 +214,7 @@ const MixingDayReport = () => {
         <Row>
           <Col>
             <LineChart
-              title={'Mixer Time Per Batcg By Minute'}
+              title={'Mixer Time Per Batch By Minute'}
               dataChart={dataChart}
               categorie={sequenBatch}
             />

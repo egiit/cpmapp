@@ -12,6 +12,8 @@ import ProtectedRouter from './components/auth/ProtectedRouter';
 import MixingDayReport from './components/page/compMixing/MixingDayReport';
 import HeaderForm from './components/page/HeaderForm';
 import MixingCheckListFormula from './components/page/MixingCheckListFormula';
+import Forming from './components/page/Forming';
+import MainMenu from './components/page/MainMenu';
 
 // import { useAuth } from './components/auth/AuthProvider';
 // export const AuthContext = createContext(null);
@@ -48,11 +50,13 @@ function App() {
           </ProtectedRouter>
         }
       >
+        <Route path="mainmenu" element={<MainMenu />} />
         <Route path="dashboards" element={<Dashboard />} />
         <Route path="register" element={<Register />} />
         <Route path="mixer" element={<Mixing />} />
         <Route path="mixer/checklist" element={<MixingCheckListFormula />} />
         <Route path="mixer/report" element={<MixingDayReport />} />
+        <Route path="forming" element={<Forming />} />
         <Route path="headerform" element={<HeaderForm />} />
         <Route path="headerform/edit" element={<HeaderForm />} />
         <Route path="*" element={<NotFound />} />

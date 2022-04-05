@@ -6,8 +6,11 @@ import ModelConfrmTab from './ModelConfrmTab';
 import ModelRemark from './ModelRemark';
 import { flash } from 'react-universal-flash';
 import GetDate from '../utilis/GetDate';
+import { AuthContext } from '../../auth/AuthProvider';
 
 const TabContentMixing = () => {
+  const { dispatch } = useContext(AuthContext);
+
   const { mixerData, batchData, header, refreshBatc } = useContext(
     MixingContex
   );
@@ -22,6 +25,13 @@ const TabContentMixing = () => {
   const [modConfrmTsfr, setmodConfrmTsfr] = useState(false); //modal confirm transfer
   const [modRemark, setmodRemark] = useState(false); //modal add remark
   const [dataRemark, setDataRemak] = useState(''); //data remark
+
+  const loadingOn = () => {
+    dispatch({ type: 'LAUNCH_LOADING', payload: true });
+  };
+  const loadingOff = () => {
+    dispatch({ type: 'LAUNCH_LOADING', payload: false });
+  };
 
   // handle input change
   const handleInputChange = (e) => {
@@ -141,6 +151,7 @@ const TabContentMixing = () => {
 
   // cari form dan nilainya
   const getFormValue = async (bRegId) => {
+    loadingOn();
     setKey(bRegId);
     setInputList([]);
     setDataForm([]);
@@ -160,6 +171,7 @@ const TabContentMixing = () => {
         setDataForm(response.data);
         setInputList(list);
         setcompareList(list);
+        loadingOff();
       })
       .catch((error) => console.log(error));
   };

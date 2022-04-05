@@ -1,7 +1,9 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
-import { FcComboChart, FcDeployment } from 'react-icons/fc';
+import { FcComboChart, FcDeployment, FcHome, FcSettings } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
+import imgMixer from './iconMixer.ico';
+import imgOven from './iconOven.png';
 
 const Sidebar = () => {
   const parentCollaps = function(i) {
@@ -17,19 +19,25 @@ const Sidebar = () => {
       <div id="layoutSidenav_nav">
         <Nav
           defaultActiveKey="/home"
-          className="flex-column sb-sidenav accordion shadow-sm"
+          className="flex-column sb-sidenav accordion shadow "
           id="sidenavAccordion"
-          style={{ backgroundColor: 'white' }}
+          style={{ backgroundColor: '#0052D4' }}
         >
           <div className="sb-sidenav-menu">
             <Nav className="nav mt-4">
+              <Link to="mainmenu" className="nav-link ">
+                <div className="sb-nav-link-icon">
+                  <FcHome size={20} />
+                </div>
+                Main Menu
+              </Link>
               <Link to="dashboards" className="nav-link ">
                 <div className="sb-nav-link-icon">
                   <FcComboChart size={20} />
                 </div>
                 Dashboards
               </Link>
-              <div></div>
+
               <Nav.Link
                 onClick={() => parentCollaps('mixingColaps')}
                 href="#"
@@ -37,7 +45,12 @@ const Sidebar = () => {
                 data-bs-toggle="collapsee"
               >
                 <div className="sb-nav-link-icon">
-                  <FcDeployment size={20} />
+                  <img
+                    className="img-fluid"
+                    style={{ width: '1.2rem' }}
+                    src={imgMixer}
+                    alt=""
+                  />
                 </div>
                 Mixer
                 <div className="sb-sidenav-collapse-arrow">
@@ -49,9 +62,9 @@ const Sidebar = () => {
                   <Link className="nav-link" to="mixer">
                     Check List
                   </Link>
-                  <Link className="nav-link" to="mixer/checklist">
+                  {/* <Link className="nav-link" to="mixer/checklist">
                     Check List Formula
-                  </Link>
+                  </Link> */}
                   <Link className="nav-link" to="mixer/report">
                     Daily Report
                   </Link>
@@ -64,19 +77,24 @@ const Sidebar = () => {
                 data-bs-toggle="collapsee"
               >
                 <div className="sb-nav-link-icon">
-                  <i className="fas fa-columns"></i>
+                  <img
+                    className="img-fluid"
+                    style={{ width: '1.2rem' }}
+                    src={imgOven}
+                    alt=""
+                  />
                 </div>
-                Forming
+                Forming & Oven
                 <div className="sb-sidenav-collapse-arrow">
                   <i className="fas fa-angle-down"></i>
                 </div>
               </Nav.Link>
               <div className="collapse" id="formingColaps">
                 <nav className="sb-sidenav-menu-nested ">
-                  <a className="nav-link" href="/productions/sewing/output">
-                    Output
-                  </a>
-                  <a
+                  <Link className="nav-link" to="forming">
+                    Check List
+                  </Link>
+                  {/* <a
                     className="nav-link"
                     href="/productions/sewing/daily-report"
                   >
@@ -87,29 +105,29 @@ const Sidebar = () => {
                     href="/productions/sewing/daily-report"
                   >
                     Summary Report
-                  </a>
+                  </a> */}
                 </nav>
               </div>
               <Nav.Link
-                onClick={() => parentCollaps('ovenColaps')}
+                onClick={() => parentCollaps('formingColaps')}
                 href="#"
                 className="nav-link collapsed"
                 data-bs-toggle="collapsee"
               >
                 <div className="sb-nav-link-icon">
-                  <i className="fas fa-columns"></i>
+                  <FcDeployment size={20} />
                 </div>
-                Oven
+                Packing
                 <div className="sb-sidenav-collapse-arrow">
                   <i className="fas fa-angle-down"></i>
                 </div>
               </Nav.Link>
-              <div className="collapse" id="ovenColaps">
+              <div className="collapse" id="formingColaps">
                 <nav className="sb-sidenav-menu-nested ">
-                  <a className="nav-link" href="/productions/sewing/output">
-                    Output
-                  </a>
-                  <a
+                  {/* <Link className="nav-link" to="forming">
+                    Check List
+                  </Link> */}
+                  {/* <a
                     className="nav-link"
                     href="/productions/sewing/daily-report"
                   >
@@ -120,9 +138,10 @@ const Sidebar = () => {
                     href="/productions/sewing/daily-report"
                   >
                     Summary Report
-                  </a>
+                  </a> */}
                 </nav>
               </div>
+
               <Nav.Link
                 onClick={() => parentCollaps('setupColaps')}
                 href="#"
@@ -130,7 +149,7 @@ const Sidebar = () => {
                 data-bs-toggle="collapsee"
               >
                 <div className="sb-nav-link-icon">
-                  <i className="fas fa-columns"></i>
+                  <FcSettings size={20} />
                 </div>
                 Setup
                 <div className="sb-sidenav-collapse-arrow">
@@ -142,18 +161,6 @@ const Sidebar = () => {
                   <Link className="nav-link" to="register">
                     Setup Users
                   </Link>
-                  <a
-                    className="nav-link"
-                    href="/productions/sewing/daily-report"
-                  >
-                    Daily Report
-                  </a>
-                  <a
-                    className="nav-link"
-                    href="/productions/sewing/daily-report"
-                  >
-                    Summary Report
-                  </a>
                 </nav>
               </div>
             </Nav>

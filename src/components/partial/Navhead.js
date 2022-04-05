@@ -26,14 +26,14 @@ const Navhead = () => {
 
   return (
     <Navbar
-      bg="white"
+      style={{ backgroundColor: '#0052D4' }}
       variant="light"
       expand="lg"
       className="sb-topnav navbar-expand shadow-sm"
     >
       <Container fluid>
         <Navbar.Brand className="fw-bold " href="#">
-          <span className="text-primary">CHOICE PLUS</span>
+          <span className="text-light">CHOICE PLUS</span>
         </Navbar.Brand>
         <Button
           onClick={sidebarToggle}

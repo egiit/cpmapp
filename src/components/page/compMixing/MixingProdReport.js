@@ -32,7 +32,7 @@ const MixingProdReport = ({
 
   const getHeaderList = async () => {
     try {
-      axios.get(`/header/report/${date}`).then((response) => {
+      axios.get(`/header/report/${date}/1`).then((response) => {
         // console.log(response.data);
         setDataHeader(response.data);
         setDefaulDataHeader(response.data);

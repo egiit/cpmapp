@@ -108,7 +108,7 @@ const ModalDowntime = ({
         batch_regis_id: batchId,
         downtime_type: typeDown,
         downtime_start: startTime,
-        downtime_end: startTime,
+        downtime_end: '00:00:00',
         downtime_add_remark: remarkDown,
         downtime_add_id: header.header_add_id,
       };

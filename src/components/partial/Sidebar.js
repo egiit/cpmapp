@@ -84,7 +84,7 @@ const Sidebar = () => {
                     alt=""
                   />
                 </div>
-                Forming & Oven
+                Forming
                 <div className="sb-sidenav-collapse-arrow">
                   <i className="fas fa-angle-down"></i>
                 </div>
@@ -94,18 +94,38 @@ const Sidebar = () => {
                   <Link className="nav-link" to="forming">
                     Check List
                   </Link>
-                  {/* <a
-                    className="nav-link"
-                    href="/productions/sewing/daily-report"
-                  >
+                  <Link className="nav-link" to="forming/report">
                     Daily Report
-                  </a>
-                  <a
-                    className="nav-link"
-                    href="/productions/sewing/daily-report"
-                  >
-                    Summary Report
-                  </a> */}
+                  </Link>
+                </nav>
+              </div>
+              <Nav.Link
+                onClick={() => parentCollaps('ovenColapse')}
+                href="#"
+                className="nav-link collapsed"
+                data-bs-toggle="collapsee"
+              >
+                <div className="sb-nav-link-icon">
+                  <img
+                    className="img-fluid"
+                    style={{ width: '1.2rem' }}
+                    src={imgOven}
+                    alt=""
+                  />
+                </div>
+                Oven
+                <div className="sb-sidenav-collapse-arrow">
+                  <i className="fas fa-angle-down"></i>
+                </div>
+              </Nav.Link>
+              <div className="collapse" id="ovenColapse">
+                <nav className="sb-sidenav-menu-nested ">
+                  <Link className="nav-link" to="oven">
+                    Check List
+                  </Link>
+                  <Link className="nav-link" to="oven/report">
+                    Daily Report
+                  </Link>
                 </nav>
               </div>
               <Nav.Link

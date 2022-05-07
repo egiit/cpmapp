@@ -14,32 +14,13 @@ import HeaderForm from './components/page/HeaderForm';
 import MixingCheckListFormula from './components/page/MixingCheckListFormula';
 import Forming from './components/page/Forming';
 import MainMenu from './components/page/MainMenu';
-
-// import { useAuth } from './components/auth/AuthProvider';
-// export const AuthContext = createContext(null);
+import FormingDayReport from './components/page/compForming/FormingDayReport';
+import FormingMap from './components/page/compForming/FormingMap';
+import OvenMap from './components/page/compOven/OvenMap';
+import Oven from './components/page/Oven';
+import OvenDayReport from './components/page/compOven/OvenDayReport';
 
 function App() {
-  // const { userId } = useAuth();
-  // const [menus, setMenus] = useState([]);
-  // const [linkElemen, setLinkElemen] = useState([])
-
-  // useEffect(() => {
-  //   const menuAccessView = async () => {
-  //     await axios
-  //       .get(`http://localhost:3001/useraccess/menuview/${userId}`)
-  //       .then((response) => setMenus(response.data))
-  //       .then(() => {
-  //         const linkMenu = []
-  //         menus.map(menu => linkMenu.push[`<${menu.MENU_FORM} />`] )
-  //         setLinkElemen(linkMenu)
-  //       })
-  //       .catch((error) => {
-  //         if (error.response) return error.response.data.message;
-  //       });
-  //   };
-  //   menuAccessView();
-  // }, [setMenus, userId, setLinkElemen]);
-
   return (
     <Routes>
       <Route path="/" element={<Login />} />
@@ -56,7 +37,14 @@ function App() {
         <Route path="mixer" element={<Mixing />} />
         <Route path="mixer/checklist" element={<MixingCheckListFormula />} />
         <Route path="mixer/report" element={<MixingDayReport />} />
-        <Route path="forming" element={<Forming />} />
+        <Route element={<FormingMap />}>
+          <Route path="forming" element={<Forming />} />
+          <Route path="forming/report" element={<FormingDayReport />} />
+        </Route>
+        <Route element={<OvenMap />}>
+          <Route path="oven" element={<Oven />} />
+          <Route path="oven/report" element={<OvenDayReport />} />
+        </Route>
         <Route path="headerform" element={<HeaderForm />} />
         <Route path="headerform/edit" element={<HeaderForm />} />
         <Route path="*" element={<NotFound />} />

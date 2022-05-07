@@ -444,6 +444,9 @@ const TabContentMixing = () => {
                                       </Form.Label>
                                       <Form.Control
                                         type={after.standar_form_tipe}
+                                        maxLength={3}
+                                        min={0}
+                                        max={100}
                                         size="sm"
                                         step="any"
                                         placeholder={

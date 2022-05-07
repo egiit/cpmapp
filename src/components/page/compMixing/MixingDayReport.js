@@ -9,9 +9,12 @@ import {
   Form,
   Tab,
   Tabs,
+  Accordion,
+  Badge,
+  Table,
 } from 'react-bootstrap';
-// import Chart from 'react-apexcharts';
-// import ChartDashboard from '../compdashboard/ChartDashboard';
+import { FcApproval, FcCancel } from 'react-icons/fc';
+
 import GetDate from '../utilis/GetDate';
 import axios from '../../axios/axios';
 import LineChart from '../apexChart/LineChart';
@@ -34,6 +37,13 @@ const MixingDayReport = () => {
   const [productListId, setPoruductListid] = useState([]);
   const [masterValue, setMasterValue] = useState([]);
   const [standarForm, setStandarForm] = useState([]);
+
+  const [totalBatch, setTotalBatch] = useState(0);
+  const [finishBatch, setFinishBatch] = useState(0);
+  const [varBatch, setVarBatch] = useState(0);
+  const [runBatch, setRunBatch] = useState(0);
+
+  const [downtimeList, setDowntimeList] = useState([]);
 
   const loadingOn = () => {
     dispatch({ type: 'LAUNCH_LOADING', payload: true });
@@ -65,10 +75,12 @@ const MixingDayReport = () => {
     getparamReport(date, shiftId, value);
   };
 
-  // const filterFunc = () => {
-  //   getProductChart();
-  //   getSequenBatch();
-  // };
+  const getDowntimeList = async () => {
+    await axios
+      .get(`/downtime/report/${date}%25/1`)
+      .then((response) => setDowntimeList(response.data))
+      .catch((error) => console.log(error.message));
+  };
 
   useEffect(() => {
     // setDate();
@@ -77,6 +89,7 @@ const MixingDayReport = () => {
     getProductChart(date, shiftId, productId);
     getparamReport(date, shiftId, productId);
     getMixMasterVal(date);
+    getDowntimeList();
     getStandarForm();
   }, [date]);
 
@@ -90,6 +103,13 @@ const MixingDayReport = () => {
           const valueShift = [
             ...new Set(res.data.map((x) => x.mixer_proc_chek_shift)), //disitng shift
           ];
+
+          //runing batch
+          const runB = res.data.findIndex(
+            (bt) => bt.start_time !== null && bt.finish_time === null
+          );
+
+          setRunBatch(runB + 1);
 
           if (shft === '') {
             setListShift(valueShift);
@@ -114,6 +134,23 @@ const MixingDayReport = () => {
             ).values(), //disitng shift
           ];
           setDataChart(valueProduct);
+
+          //Total Batch
+          const ttlB = response.data
+            .filter((dat, ind) => ind === 0)
+            .map((datB, i) => datB.data.length);
+
+          //finish Batch
+          const fnsB = [
+            ...new Set(
+              response.data.map((x) => x.data.filter((y) => y !== null))
+            ),
+          ].flat(1).length;
+
+          setTotalBatch(ttlB);
+          setFinishBatch(fnsB);
+          setVarBatch(ttlB - fnsB);
+
           if (prod === '') {
             setListProduct(response.data);
           }
@@ -170,7 +207,7 @@ const MixingDayReport = () => {
         </div>
         <Card className="border-0 shadow mb-3">
           <Card.Body>
-            {/* {JSON.stringify(listProduct)} */}
+            {/* {JSON.stringify(sequenBatch)} */}
             <Row>
               <Col className="mb-2" md={4}>
                 <Form.Control
@@ -212,6 +249,48 @@ const MixingDayReport = () => {
           </Card.Body>
         </Card>
         <Row>
+          <Col xs={6} sm={3}>
+            <Card className="border-0 shadow mb-3 bg-primary">
+              <Card.Body>
+                <p className="h5">Total Batch</p>
+                <p className="h2">{totalBatch}</p>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col xs={6} sm={3}>
+            <Card
+              className="border-0 shadow mb-3"
+              style={{ background: 'rgba(66, 219, 0, 0.5)' }}
+            >
+              <Card.Body>
+                <p className="h5">Finish Batch</p>
+
+                <p className="h2">{finishBatch}</p>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col xs={6} sm={3}>
+            <Card
+              className="border-0 shadow mb-3"
+              style={{ background: 'rgba(248, 0, 23, 0.7)' }}
+            >
+              <Card.Body>
+                <p className="h5">Var Batch</p>
+                <p className="h2">{varBatch}</p>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col xs={6} sm={3}>
+            <Card className="border-0 shadow mb-3 bg-warning">
+              <Card.Body>
+                <p className="h5">Running Batch</p>
+                <p className="h2">{runBatch}</p>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
           <Col>
             <LineChart
               title={'Mixer Time Per Batch By Minute'}
@@ -220,6 +299,56 @@ const MixingDayReport = () => {
             />
           </Col>
         </Row>
+
+        <Accordion className="shadow">
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>
+              <span className="fw-bold">Downtime List</span>
+              <Badge bg="danger">{downtimeList.length}</Badge>
+            </Accordion.Header>
+            <Accordion.Body>
+              {/* {JSON.stringify(downtimeList)} */}
+              <Table size="sm" responsive hover>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Product Name</th>
+                    <th>Batch Sequence</th>
+                    <th>Downtime Type</th>
+                    <th>Remark</th>
+                    <th>Start Time</th>
+                    <th>Fix Time</th>
+                    <th>Fix Remark</th>
+                    <th>Total Time</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {downtimeList.map((downtm, i) => (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td>{downtm.product_name}</td>
+                      <td>{downtm.batch_regis_sequen}</td>
+                      <td>{downtm.downtime_type}</td>
+                      <td>{downtm.downtime_add_remark}</td>
+                      <td>{downtm.downtime_start}</td>
+                      <td>{downtm.downtime_end}</td>
+                      <td>{downtm.downtime_fix_remark}</td>
+                      <td>{downtm.ttime}</td>
+                      <td>
+                        {downtm.downtime_end !== '00:00:00' ? (
+                          <FcApproval />
+                        ) : (
+                          <FcCancel />
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
 
         <Row className="my-3">
           <Col>

@@ -30,19 +30,14 @@ const HeaderForm = () => {
 
   useEffect(() => {
     const getHeader = async () => {
-      await axios
-        .get(`header/${value.userId}/${tanggal}`)
-        .then((response) => {
-          if (response.data.length !== 0) {
-            setHeaderId(response.data.header_id);
-            setShift(response.data.header_shift);
-            setOperator(response.data.header_operator);
-            setLeader(response.data.header_leader);
-          }
-        })
-        .catch((error) => {
-          console.log('Error Dapatkan Data Shift Header');
-        });
+      await axios.get(`header/${value.userId}/${tanggal}`).then((response) => {
+        if (response.data.length !== 0) {
+          setHeaderId(response.data.header_id);
+          setShift(response.data.header_shift);
+          setOperator(response.data.header_operator);
+          setLeader(response.data.header_leader);
+        }
+      });
     };
     if (pathName === '/headerform/edit') {
       getHeader();
@@ -123,7 +118,7 @@ const HeaderForm = () => {
               <h2 className="">{deptName}</h2>
               <Breadcrumb>
                 <Breadcrumb.Item href="" active>
-                  Check List Mixer
+                  Input Header Form
                 </Breadcrumb.Item>
               </Breadcrumb>
             </div>

@@ -24,21 +24,20 @@ const MainMenu = () => {
           <Col className="mb-3 " xs={6} md={3}>
             <Card className="border-0 shadow">
               <Card.Body>
-                <Row>
-                  <Col className="text-center">
-                    <FcComboChart size={80} />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="text-center">
-                    <Link
-                      to="/dashboards"
-                      className="btn btn-primary  btn-sm rounded-pill"
-                    >
-                      Dashboards
-                    </Link>
-                  </Col>
-                </Row>
+                <Link to="/dashboards">
+                  <Row>
+                    <Col className="text-center">
+                      <FcComboChart size={80} />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="text-center">
+                      <div className="btn btn-primary  btn-sm rounded-pill">
+                        Dashboards
+                      </div>
+                    </Col>
+                  </Row>
+                </Link>
               </Card.Body>
             </Card>
           </Col>
@@ -46,26 +45,25 @@ const MainMenu = () => {
           <Col className="mb-3" xs={6} md={3}>
             <Card className="border-0 shadow">
               <Card.Body>
-                <Row>
-                  <Col className="text-center">
-                    <img
-                      className="img-fluid"
-                      style={{ width: '5rem' }}
-                      src={imgMixer}
-                      alt=""
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="text-center">
-                    <Link
-                      to="/mixer/report"
-                      className="btn btn-danger  btn-sm rounded-pill"
-                    >
-                      Mixer
-                    </Link>
-                  </Col>
-                </Row>
+                <Link to="/mixer/report">
+                  <Row>
+                    <Col className="text-center">
+                      <img
+                        className="img-fluid"
+                        style={{ width: '5rem' }}
+                        src={imgMixer}
+                        alt=""
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="text-center">
+                      <div className="btn btn-danger  btn-sm rounded-pill">
+                        Mixer
+                      </div>
+                    </Col>
+                  </Row>
+                </Link>
               </Card.Body>
             </Card>
           </Col>
@@ -75,47 +73,48 @@ const MainMenu = () => {
           <Col className="mb-3" xs={6} md={3}>
             <Card className="border-0 shadow">
               <Card.Body>
-                <Row>
-                  <Col className="text-center">
-                    <img
-                      className="img-fluid"
-                      style={{ width: '6rem' }}
-                      src={imgOven}
-                      alt=""
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="text-center">
-                    <Link
-                      to="/mainmenu"
-                      className="btn btn-secondary  btn-sm rounded-pill"
-                    >
-                      Forming & Oven
-                    </Link>
-                  </Col>
-                </Row>
+                <Link to="/mainmenu">
+                  <Row>
+                    <Col className="text-center">
+                      <img
+                        className="img-fluid"
+                        style={{ width: '6rem' }}
+                        src={imgOven}
+                        alt=""
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="text-center">
+                      <div
+                        to="/mainmenu"
+                        className="btn btn-secondary  btn-sm rounded-pill"
+                      >
+                        Forming & Oven
+                      </div>
+                    </Col>
+                  </Row>
+                </Link>
               </Card.Body>
             </Card>
           </Col>
           <Col className="mb-3" xs={6} md={3}>
             <Card className="border-0 shadow">
               <Card.Body>
-                <Row>
-                  <Col className="text-center">
-                    <FcDeployment size={80} />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="text-center">
-                    <Link
-                      to="/mainmenu"
-                      className="btn btn-warning btn-sm rounded-pill"
-                    >
-                      Packing
-                    </Link>
-                  </Col>
-                </Row>
+                <Link to="/mainmenu">
+                  <Row>
+                    <Col className="text-center">
+                      <FcDeployment size={80} />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="text-center">
+                      <div className="btn btn-warning btn-sm rounded-pill">
+                        Packing
+                      </div>
+                    </Col>
+                  </Row>
+                </Link>
               </Card.Body>
             </Card>
           </Col>

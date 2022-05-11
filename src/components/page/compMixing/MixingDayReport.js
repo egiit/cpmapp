@@ -109,6 +109,18 @@ const MixingDayReport = () => {
             (bt) => bt.start_time !== null && bt.finish_time === null
           );
 
+          //Total Batch
+          const ttlB = res.data.length;
+
+          //finish Batch
+          const fnsB = res.data.filter(
+            (btchF) => btchF.batch_regis_end_time !== null
+          ).length;
+
+          setTotalBatch(ttlB);
+          setFinishBatch(fnsB);
+          setVarBatch(ttlB - fnsB);
+
           setRunBatch(runB + 1);
 
           if (shft === '') {
@@ -134,22 +146,6 @@ const MixingDayReport = () => {
             ).values(), //disitng shift
           ];
           setDataChart(valueProduct);
-
-          //Total Batch
-          const ttlB = response.data
-            .filter((dat, ind) => ind === 0)
-            .map((datB, i) => datB.data.length);
-
-          //finish Batch
-          const fnsB = [
-            ...new Set(
-              response.data.map((x) => x.data.filter((y) => y !== null))
-            ),
-          ].flat(1).length;
-
-          setTotalBatch(ttlB);
-          setFinishBatch(fnsB);
-          setVarBatch(ttlB - fnsB);
 
           if (prod === '') {
             setListProduct(response.data);

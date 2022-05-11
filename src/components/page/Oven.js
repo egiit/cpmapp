@@ -11,6 +11,7 @@ import GetDate from './utilis/GetDate';
 import { flash } from 'react-universal-flash';
 import { OvenContex } from './provider/Oven.provider';
 import OvenTabContent from './compOven/OvenTabContent';
+import CardDowntime from './compUtils/CardDowntime';
 
 const Oven = () => {
   const { header } = useContext(OvenContex);
@@ -69,6 +70,7 @@ const Oven = () => {
           <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Col sm={3}>
               <CardProdOven setProductName={handleChangeProd} />
+              <CardDowntime />
             </Col>
             <Col sm={9} className="mb-3">
               <Card className="border-0 shadow">

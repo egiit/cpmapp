@@ -19,6 +19,7 @@ import FormingMap from './components/page/compForming/FormingMap';
 import OvenMap from './components/page/compOven/OvenMap';
 import Oven from './components/page/Oven';
 import OvenDayReport from './components/page/compOven/OvenDayReport';
+import Downtime from './components/page/Downtime';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="mainmenu" element={<MainMenu />} />
         <Route path="dashboards" element={<Dashboard />} />
         <Route path="register" element={<Register />} />
+        <Route path="downtime" element={<Downtime />} />
         <Route path="mixer" element={<Mixing />} />
         <Route path="mixer/checklist" element={<MixingCheckListFormula />} />
         <Route path="mixer/report" element={<MixingDayReport />} />

@@ -1,50 +1,67 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap';
-import { BiAddToQueue } from 'react-icons/bi';
-import ModalDowntime from './ModalDowntime';
-import { MixingContex } from '../provider/Mixing.provider';
+import { useNavigate } from 'react-router-dom';
+import GetDate from '../utilis/GetDate';
 import axios from '../../axios/axios';
-import { FcApproval, FcCancel } from 'react-icons/fc';
+import { FcApproval, FcCancel, FcSupport } from 'react-icons/fc';
+import ModalDetailDowntime from '../comDowntime/ModalDetailDowntime';
+import { AuthContext } from '../../auth/AuthProvider';
 
 const CardDowntime = () => {
-  const { header } = useContext(MixingContex);
-  const [showModalDownTime, setshowModalDownTime] = useState(false);
-  const [listDownTime, setlistDownTime] = useState([]);
-  const [dataEdit, setdataEdit] = useState([]);
-  const [editStatus, seteditStatus] = useState(false);
+  const navigate = useNavigate();
+  const { value } = useContext(AuthContext);
+  const { userDept } = value;
+  const date = GetDate();
+  const [showModalDetail, setShowModalDetail] = useState(false);
+  const [dataDetail, setDataDetail] = useState([]);
+  const [status, setStatus] = useState('');
+
+  const [downtimeList, setDowntimeList] = useState([]);
+
+  const getDowntimeList = async () => {
+    await axios
+      .get(`/downtime/list/${date}%25`)
+      .then((response) => setDowntimeList(response.data))
+      .catch((error) => console.log(error.message));
+  };
 
   useEffect(() => {
-    getDowntime();
-  }, [header]);
+    getDowntimeList();
+    // getDowntime();
+  }, []);
 
   // function get list downtime
-  const getDowntime = async () => {
-    await axios
-      .get(`downtime/${header.header_id}`)
-      .then((response) => setlistDownTime(response.data));
+  // const getDowntime = async () => {
+  //   await axios
+  //     .get(`downtime/${header.header_id}`)
+  //     .then((response) => setlistDownTime(response.data));
+  // };
+
+  //handle on modal detail
+  const handleDetail = (data) => {
+    checkStatus(data.downtime_end, data.downtime_repair);
+    setDataDetail(data);
+    setShowModalDetail(true);
   };
 
-  //handle on modal edit or delete
-  const editDowntime = (dwtId) => {
-    const forEdit = listDownTime.filter(
-      (dataDwt) => dataDwt.downtime_id === dwtId
-    );
-    seteditStatus(true);
-    setdataEdit(forEdit);
-    setshowModalDownTime(true);
-  };
+  // // function cancel Modal
+  // const cancelModal = () => {
+  //   seteditStatus(false);
+  //   setdataEdit([]);
+  //   setShowModalDetail(false);
+  // };
 
-  // function cancel Modal
-  const cancelModal = () => {
-    seteditStatus(false);
-    setdataEdit([]);
-    setshowModalDownTime(false);
+  const checkStatus = (end, repair) => {
+    if (end === null && repair === null) {
+      return setStatus('Still Not Fixed');
+    }
+    if (end === null && repair !== null) {
+      return setStatus('Under Reapair');
+    }
+    if (end !== null) {
+      return setStatus('Already Fixed');
+    }
   };
-
-  // interval for check fix downtime
-  // setInterval(function() {
-  //   getDowntime();
-  // }, 300000);
 
   return (
     <>
@@ -52,47 +69,56 @@ const CardDowntime = () => {
         <Card.Header>
           <Button
             size="sm"
-            variant="danger"
-            onClick={() => setshowModalDownTime(true)}
+            variant="primary"
+            onClick={() => navigate('/downtime')}
           >
-            Add Downtime <BiAddToQueue size={20} />
+            Downtime List{' '}
+            {downtimeList.length !== 0 ? (
+              <span className="badge bg-danger">{downtimeList.length}</span>
+            ) : (
+              ''
+            )}
           </Button>
         </Card.Header>
         <Card.Body>
-          {listDownTime.map((listD, index) => (
-            <Row key={index} className="mb-2">
-              <Col>
-                <div
-                  onClick={() => editDowntime(listD.downtime_id)}
-                  style={{ cursor: 'pointer' }}
-                  className={
-                    listD.downtime_end === '00:00:00'
-                      ? `rounded p-2 border shadow border-danger`
-                      : `rounded p-2 border shadow border-success`
-                  }
-                >
-                  {listD.downtime_type}
-                  {listD.downtime_end === '00:00:00' ? (
-                    <FcCancel />
-                  ) : (
-                    <FcApproval />
-                  )}
-                  {/* <span className="badge bg-danger">
-                    {listD.downtime_start}
-                  </span> */}
-                </div>
-              </Col>
-            </Row>
-          ))}
+          {downtimeList
+            .filter((dtwlist) => dtwlist.downtime_dept_id === userDept)
+            .map((listD, index) => (
+              <Row key={index} className="mb-2">
+                <Col>
+                  <div
+                    onClick={() => handleDetail(listD)}
+                    style={{ cursor: 'pointer' }}
+                    className={
+                      listD.downtime_end === null
+                        ? `rounded p-2 border shadow border-danger`
+                        : `rounded p-2 border shadow border-success`
+                    }
+                  >
+                    {listD.downtime_type}
+                    {listD.downtime_end === null ? (
+                      <FcCancel />
+                    ) : (
+                      <FcApproval />
+                    )}
+                    {listD.downtime_repair !== null &&
+                    listD.downtime_end === null ? (
+                      <FcSupport />
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                </Col>
+              </Row>
+            ))}
         </Card.Body>
       </Card>
-      {showModalDownTime ? (
-        <ModalDowntime
-          editStatus={editStatus}
-          dataEdit={dataEdit}
-          getDowntime={() => getDowntime()}
-          showModalDownTime={showModalDownTime}
-          handleClose={() => cancelModal()}
+      {showModalDetail ? (
+        <ModalDetailDowntime
+          showModal={showModalDetail}
+          closedModal={() => setShowModalDetail(false)}
+          dataDetailDowntime={dataDetail}
+          status={status}
         />
       ) : (
         ''

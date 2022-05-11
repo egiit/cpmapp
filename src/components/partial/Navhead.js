@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../axios/axios.js';
 import { flash } from 'react-universal-flash';
 import { AuthContext } from '../auth/AuthProvider';
+import { BiRefresh } from 'react-icons/bi';
 
 const Navhead = () => {
   const { value } = useContext(AuthContext);
@@ -22,6 +23,10 @@ const Navhead = () => {
       .delete('/logout')
       .then(() => navigate('/'))
       .catch((error) => flash('Something Wrong', 5000, 'danger'));
+  };
+
+  const refResh = () => {
+    window.location.reload(false);
   };
 
   return (
@@ -60,7 +65,6 @@ const Navhead = () => {
               <NavDropdown.Item href="#action/3.2">
                 Another action
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={logout} href="#">
                 Logout
@@ -68,6 +72,9 @@ const Navhead = () => {
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
+        <Button size="sm" variant="light" onClick={() => refResh()}>
+          <BiRefresh color="green" size={22} />
+        </Button>
       </Container>
     </Navbar>
   );

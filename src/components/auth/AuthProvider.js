@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
   const [userDept, setuserDept] = useState('');
+  const [userLevel, setuserLevel] = useState('');
 
   const refreshToken = async () => {
     return await axios
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }) => {
         setActiveUser(decoded.username);
         setExpire(decoded.exp);
         setuserDept(decoded.userDept);
+        setuserLevel(decoded.userLevel);
         // console.log(decoded);
       })
       .catch((error) => {
@@ -41,6 +43,7 @@ export const AuthProvider = ({ children }) => {
     username: activeUser,
     expire: expire,
     userDept: userDept,
+    userLevel: userLevel,
   };
 
   const chgangeBg = () => {

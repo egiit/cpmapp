@@ -4,10 +4,10 @@ import CardProdForming from './compForming/CardProdForming';
 import FormingTabsContent from './compForming/FormingTabsContent';
 import HeaderForming from './compForming/HeaderForming';
 import axios from '../axios/axios';
-// import { FormingProvider } from './provider/Forming.provider';
 import GetDate from './utilis/GetDate';
 import { flash } from 'react-universal-flash';
 import { FormingContex } from './provider/Forming.provider';
+import CardDowntime from './compUtils/CardDowntime';
 
 const Forming = () => {
   const { header } = useContext(FormingContex);
@@ -73,6 +73,7 @@ const Forming = () => {
           <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Col sm={3}>
               <CardProdForming setProductName={handleChangeProd} />
+              <CardDowntime />
             </Col>
             <Col sm={9}>
               <Card className="border-0 shadow">

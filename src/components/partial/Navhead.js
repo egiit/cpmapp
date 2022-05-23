@@ -1,14 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from '../axios/axios.js';
 import { flash } from 'react-universal-flash';
 import { AuthContext } from '../auth/AuthProvider';
 import { BiRefresh } from 'react-icons/bi';
+import GetDate from '../page/utilis/GetDate.js';
 
 const Navhead = () => {
+  const tgl = GetDate();
   const { value } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [runingBatch, setRuningBatch] = useState('0');
 
   const sidebarToggle = () => {
     document.body.classList.toggle('sb-sidenav-toggled');
@@ -28,6 +31,22 @@ const Navhead = () => {
   const refResh = () => {
     window.location.reload(false);
   };
+
+  const getRunBatch = async () => {
+    await axios.get(`/mixer/report/${tgl}/%25%25/%25`).then((res) => {
+      const runB = res.data.filter(
+        (bt) =>
+          bt.batch_regis_end_time !== null &&
+          bt.batch_regis_transfer_time !== null
+      ).length;
+
+      setRuningBatch(runB);
+    });
+  };
+
+  useEffect(() => {
+    getRunBatch();
+  }, []);
 
   return (
     <Navbar
@@ -54,7 +73,10 @@ const Navhead = () => {
               className=""
               title={
                 <span>
-                  <i className="fas fa-user fa-fw"></i>
+                  <i
+                    className="fas fa-user fa-fw"
+                    style={{ color: 'white' }}
+                  ></i>
                 </span>
               }
               id="collasible-nav-dropdown"
@@ -72,7 +94,15 @@ const Navhead = () => {
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
-        <Button size="sm" variant="light" onClick={() => refResh()}>
+        <button type="button" className="btn btn-sm btn-light mx-2 fw-bold">
+          Batch {runingBatch}
+        </button>
+        <Button
+          className="mx-1"
+          size="sm"
+          variant="light"
+          onClick={() => refResh()}
+        >
           <BiRefresh color="green" size={22} />
         </Button>
       </Container>

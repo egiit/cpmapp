@@ -46,7 +46,7 @@ const Login = () => {
         .then((response) => {
           const decode = jwtDecode(response.data.accessToken);
           if (decode.userLevel === 'ADM') return navigate('/headerform');
-          navigate('/dashboards');
+          navigate('/mainmenu');
         });
     } catch (error) {
       if (error.response) {

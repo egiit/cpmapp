@@ -330,7 +330,7 @@ const OvenTabContent = ({
                       batch.header_id !== null
                     }
                     eventKey={batch.batch_regis_id}
-                    title={`Batch${ind + 1}-${batch.batch_regis_id}`}
+                    title={`Batch ${ind + 1}`}
                   >
                     <Table size="sm" striped bordered responsive>
                       <thead>

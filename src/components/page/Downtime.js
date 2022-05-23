@@ -165,7 +165,7 @@ const Downtime = () => {
                 />
               </Col>
               <Col className="mb-1 text-end" md={3}>
-                {userLevel === 'ADM' ? (
+                {userLevel === 'ADM' || userLevel === 'admin' ? (
                   <Button
                     size="sm"
                     variant="danger"
@@ -248,7 +248,8 @@ const Downtime = () => {
                       >
                         <FcViewDetails size={17} />
                       </Button>
-                      {downtm.downtime_add_id === userId ? (
+                      {downtm.downtime_add_id === userId ||
+                      userLevel === 'admin' ? (
                         <Button
                           className="shadow me-1"
                           size="sm"
@@ -260,7 +261,7 @@ const Downtime = () => {
                       ) : (
                         ''
                       )}
-                      {userDept === 9 ? (
+                      {userDept === 9 || userLevel === 'admin' ? (
                         <Button
                           className="shadow me-1"
                           size="sm"

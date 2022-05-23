@@ -1,6 +1,12 @@
 import React, { useContext } from 'react';
 import { Nav } from 'react-bootstrap';
-import { FcComboChart, FcDeployment, FcHome, FcSettings } from 'react-icons/fc';
+import {
+  FcComboChart,
+  FcDeployment,
+  FcHome,
+  FcServices,
+  FcSettings,
+} from 'react-icons/fc';
 import { RiAlarmWarningFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import imgMixer from './iconMixer.ico';
@@ -99,12 +105,7 @@ const Sidebar = () => {
                     data-bs-toggle="collapsee"
                   >
                     <div className="sb-nav-link-icon">
-                      <img
-                        className="img-fluid"
-                        style={{ width: '1.2rem' }}
-                        src={imgOven}
-                        alt=""
-                      />
+                      <FcServices size={20} />
                     </div>
                     Forming
                     <div className="sb-sidenav-collapse-arrow">
@@ -143,7 +144,7 @@ const Sidebar = () => {
                     <div className="sb-nav-link-icon">
                       <img
                         className="img-fluid"
-                        style={{ width: '1.2rem' }}
+                        style={{ width: '1.3rem' }}
                         src={imgOven}
                         alt=""
                       />
@@ -177,7 +178,7 @@ const Sidebar = () => {
               userDept === 4 ? (
                 <div>
                   <Nav.Link
-                    onClick={() => parentCollaps('formingColaps')}
+                    onClick={() => parentCollaps('packingColaps')}
                     href="#"
                     className="nav-link collapsed"
                     data-bs-toggle="collapsee"
@@ -190,23 +191,18 @@ const Sidebar = () => {
                       <i className="fas fa-angle-down"></i>
                     </div>
                   </Nav.Link>
-                  <div className="collapse" id="formingColaps">
+                  <div className="collapse" id="packingColaps">
                     <nav className="sb-sidenav-menu-nested ">
-                      {/* <Link className="nav-link" to="forming">
-                    Check List
-                  </Link> */}
-                      {/* <a
-                    className="nav-link"
-                    href="/productions/sewing/daily-report"
-                  >
-                    Daily Report
-                  </a>
-                  <a
-                    className="nav-link"
-                    href="/productions/sewing/daily-report"
-                  >
-                    Summary Report
-                  </a> */}
+                      {userLevel === 'admin' || userLevel === 'ADM' ? (
+                        <Link className="nav-link" to="packing">
+                          Check List
+                        </Link>
+                      ) : (
+                        ''
+                      )}
+                      <Link className="nav-link" to="packing/report">
+                        Daily Report
+                      </Link>
                     </nav>
                   </div>
                 </div>

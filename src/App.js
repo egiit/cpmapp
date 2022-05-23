@@ -20,6 +20,10 @@ import OvenMap from './components/page/compOven/OvenMap';
 import Oven from './components/page/Oven';
 import OvenDayReport from './components/page/compOven/OvenDayReport';
 import Downtime from './components/page/Downtime';
+import Packing from './components/page/Packing';
+import DashboardMap from './components/page/compdashboard/DashboardMap';
+import PackingDayReport from './components/page/comPacking/PackingDayReport';
+import PackingMap from './components/page/comPacking/PackingMap';
 
 function App() {
   return (
@@ -33,7 +37,9 @@ function App() {
         }
       >
         <Route path="mainmenu" element={<MainMenu />} />
-        <Route path="dashboards" element={<Dashboard />} />
+        <Route element={<DashboardMap />}>
+          <Route path="dashboards" element={<Dashboard />} />
+        </Route>
         <Route path="register" element={<Register />} />
         <Route path="downtime" element={<Downtime />} />
         <Route path="mixer" element={<Mixing />} />
@@ -46,6 +52,10 @@ function App() {
         <Route element={<OvenMap />}>
           <Route path="oven" element={<Oven />} />
           <Route path="oven/report" element={<OvenDayReport />} />
+        </Route>
+        <Route element={<PackingMap />}>
+          <Route path="packing" element={<Packing />} />
+          <Route path="packing/report" element={<PackingDayReport />} />
         </Route>
         <Route path="headerform" element={<HeaderForm />} />
         <Route path="headerform/edit" element={<HeaderForm />} />

@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Breadcrumb, Row, Form, Col, Card } from 'react-bootstrap';
+import { ACTION, DashboardContex } from '../provider/Dashboard.provider';
 
 const HeaderDashboard = () => {
+  const { state, dispatch } = useContext(DashboardContex);
+
+  const changeDate = (e) => {
+    const { value } = e.target;
+    dispatch({ type: ACTION.CHANGE_DATE, payload: { date: value } });
+  };
+
   return (
     <>
       <div className="ms-3" id="titlepage">
@@ -12,12 +20,18 @@ const HeaderDashboard = () => {
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
+      {/* <div>{JSON.stringify(state.batchByplan)}</div> */}
       <Row>
         <Col className="mb-2" sm={12} md={4}>
           <Card className="border-0 shadow">
             <Card.Body>
               <Form>
-                <Form.Control size="sm" type="date" />
+                <Form.Control
+                  size="sm"
+                  value={state.date}
+                  onChange={(e) => changeDate(e)}
+                  type="date"
+                />
               </Form>
             </Card.Body>
           </Card>

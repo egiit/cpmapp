@@ -1,20 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Chart from 'react-apexcharts'; // import { ReactApexChart } from 'apexcharts';
-import { Col, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
+import { DashboardContex } from '../provider/Dashboard.provider';
 
 const ChartDashboard = () => {
-  const series = [
-    {
-      name: 'Malkitis Lemon',
-      data: [65, 59, 80, 81, 56, 55, 45, 65, 85, 83, 80, 85, 65, 87],
-      id: 1,
-    },
-    {
-      name: 'Malkitis Gula',
-      data: [null, null, null, 87, 55, 65, 67, 85, 83, 80, 85, 65, 87],
-      id: 2,
-    },
-  ];
+  const { state } = useContext(DashboardContex);
+
+  const series = state.dataChartFG.series ? state.dataChartFG.series : [];
 
   const options = {
     chart: {
@@ -38,6 +30,7 @@ const ChartDashboard = () => {
     stroke: {
       curve: 'straight',
     },
+    // colors: ['#b9fc00', '#E91E63', '#9C27B0'],
     title: {
       text: 'Finish Good by Hour',
       align: 'left',
@@ -49,34 +42,19 @@ const ChartDashboard = () => {
       },
     },
     xaxis: {
-      categories: [
-        '07:00',
-        '08:00',
-        '09:00',
-        '10:00',
-        '11:00',
-        '12:00',
-        '13:00',
-        '14:00',
-        '15:00',
-        '16:00',
-        '17:00',
-        '18:00',
-        '19:00',
-        '20:00',
-      ],
+      categories: state.dataChartFG.categories
+        ? state.dataChartFG.categories
+        : [],
     },
   };
 
   return (
     <>
-      <Col md={12} xl={6}>
-        <Card className="shadow border-0 ">
-          <Card.Body className="p-1 p-sm-1">
-            <Chart options={options} series={series} type="line" height={350} />
-          </Card.Body>
-        </Card>
-      </Col>
+      <Card className="shadow border-0 ">
+        <Card.Body className="p-1 p-sm-1">
+          <Chart options={options} series={series} type="line" height={350} />
+        </Card.Body>
+      </Card>
     </>
   );
 };

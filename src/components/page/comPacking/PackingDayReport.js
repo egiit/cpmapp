@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Card, Container, Breadcrumb } from 'react-bootstrap';
 
-const Packing = () => {
+const PackingDayReport = () => {
   return (
     <div>
       <Container fluid className="px-4 mt-4">
@@ -24,4 +24,4 @@ const Packing = () => {
   );
 };
 
-export default Packing;
+export default PackingDayReport;

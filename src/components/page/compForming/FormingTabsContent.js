@@ -28,10 +28,11 @@ const FormingTabsContent = ({
   const { prodForming, batchData, userId, header } = useContext(FormingContex);
   const [batchFormVal, setBatchFormVal] = useState([]);
   const [showRemarkMod, setshowRemarkMod] = useState(false);
+  const [batchId, setbatchId] = useState('');
 
   useEffect(() => {
     setBatchFormVal([]);
-  }, [formingProdId]);
+  }, [formingProdId, batchId]);
 
   //Ini Input Acordion
   const handleInputProd = (e) => {
@@ -76,7 +77,7 @@ const FormingTabsContent = ({
       name === 'forming_prod_reject_lantai'
     ) {
       //hitung total reject
-      updateProd.forming_prod_reject_tot = funcPenjumlahan(
+      updateProd.forming_prod_reject_tot = funcPenjumlahanDec(
         updateProd.forming_prod_reject_mesin,
         updateProd.forming_prod_reject_lantai
       );
@@ -91,6 +92,11 @@ const FormingTabsContent = ({
   const funcPenjumlahan = (a, b) => {
     const total = parseInt(a) + parseInt(b);
     return isNaN(total) ? 0 : total;
+    // return 0;
+  };
+  const funcPenjumlahanDec = (a, b) => {
+    const total = parseFloat(a) + parseFloat(b);
+    return isNaN(total) ? 0 : total.toFixed(2);
     // return 0;
   };
 
@@ -108,8 +114,11 @@ const FormingTabsContent = ({
     await axios
       .post('forming/product-check', forPushCheck)
       .then((ressponse) => {
-        setdataCheckProd([ressponse.data.data]);
-        setformingProdId(ressponse.data.data.forming_prod_id);
+        if (ressponse.data.message !== 'Data Updated') {
+          setdataCheckProd([ressponse.data.data]);
+          setformingProdId(ressponse.data.data.forming_prod_id);
+        }
+
         flash(ressponse.data.message, 5000, 'success');
       })
       .catch((error) => flash(error.message, 5000, 'danger'));
@@ -117,52 +126,107 @@ const FormingTabsContent = ({
 
   //untuk get data saat klik tabs batch
   const handleChangeBatch = async (batchReg) => {
+    setbatchId(batchReg);
     await axios
       .get(`/forming/batch/form/${batchReg}`)
       .then((response) => setBatchFormVal(response.data))
       .catch((error) => flash(error.message, 5000, 'danger'));
   };
 
-  //untuk handle input data batch (saat ini baru start batch aja)
+  //untuk handle input data batch
   const handleInputBatchVal = async (e, batchRegId, prodCheckId) => {
+    //disini di cek dulu apa Product info sudah di input? min input start product info
+    if (!prodCheckId) {
+      return flash('Harap Input Product Info', 5000, 'danger'); //jika tidak kasih flash danger
+    }
+
     const { name, value } = e.target;
+    const lists = [...batchFormVal];
     const dataInput = {
       forming_prod_id: prodCheckId,
       batch_regis_id: batchRegId,
-      standar_form_id: name,
+      standar_form_id: parseInt(name),
       standar_form_value: value,
     };
 
-    //disini di cek dulu apa Product info sudah di input? min input start product info
-    if (!prodCheckId) {
-      return flash('Harap Input Product Info', 10000, 'danger'); //jika tidak kasih flash danger
+    const index = lists.findIndex(
+      (list) => list.standar_form_id === parseInt(name)
+    );
+
+    lists[index] = { ...lists[index], ...dataInput };
+
+    if (
+      lists[0].standar_form_value !== null &&
+      lists[1].standar_form_value !== null
+    ) {
+      const totTime = CountHour(
+        lists[1].standar_form_value,
+        lists[0].standar_form_value
+      );
+
+      if (
+        isNaN(totTime.split(':')[0]) ||
+        parseInt(totTime.split(':')[0]) < 0 ||
+        parseInt(totTime.split(':')[1]) < 0
+      ) {
+        return flash(
+          'Finish Time Tidak Bisa Lebih Kecil Dari Start Time',
+          10000,
+          'danger'
+        );
+      }
+
+      lists[2] = {
+        ...lists[2],
+        forming_prod_id: prodCheckId,
+        batch_regis_id: batchRegId,
+        standar_form_id: 69,
+        standar_form_value: totTime,
+      };
+      return setBatchFormVal(lists);
     }
 
-    const dataPost = { ...batchFormVal[0], ...dataInput }; //jika ya joint object
-    setBatchFormVal([dataPost]); //set state jadi array of object
+    return setBatchFormVal(lists); //set state jadi array of object
   };
 
   //ini function handle save batch
-  const handleBatchFlagh = async (batchRegId) => {
-    const dataBatch = batchFormVal.filter(
-      // cek dulu apa regist id ada atau tidak
-      (batch) => batch.batch_regis_id === batchRegId
-    )[0];
-
-    if (!dataBatch) {
+  const handleBatchFlagh = (batchRegId) => {
+    if (batchFormVal[0].standar_form_value === null) {
       //kalo tidak ada berart belum di input start batch
       return flash('Start Batch Belum Diinput', 3000, 'danger'); //kasih flash danger
     }
 
-    dataBatch['forming_batch_prod_flag'] = 'Y'; //jika ada rubah flagh
+    const dataBatch = batchFormVal.filter(
+      // cek dulu apa regist id ada atau tidak
+      (batch) => batch.standar_form_value !== null
+    );
 
-    await axios //push data
-      .post(`/forming/batch`, dataBatch)
-      .then((response) => {
-        handleChangeBatch(batchRegId);
-        flash(response.data.message, 5000, 'success');
-      })
-      .catch((error) => flash(error.message, 5000, 'danger'));
+    dataBatch.map(async (dataPush, indx) => {
+      dataPush['forming_batch_prod_flag'] = 'Y'; //jika ada rubah flagh
+
+      if (dataPush.standar_form_value !== null) {
+        dataPush.standar_form_value.split(':').forEach((dtime) => {
+          if (isNaN(dtime) || parseInt(dtime) < 0) {
+            return flash(
+              'Finish Time Tidak Bisa Lebih Kecil Dari Start Time',
+              3000,
+              'danger'
+            );
+          }
+        });
+      }
+      //push data
+      await axios
+        .post(`/forming/batch`, dataPush)
+        .then((response) => {
+          if (dataBatch.length === indx + 1) {
+            //jika push data terakhir maka munculkan flash
+            flash(response.data.message, 5000, 'success');
+            handleChangeBatch(batchRegId);
+          }
+        })
+        .catch((error) => flash(error.message, 5000, 'danger'));
+    });
   };
 
   return (
@@ -264,6 +328,7 @@ const FormingTabsContent = ({
                             type="number"
                             size="sm"
                             min={0}
+                            step="0.1"
                             placeholder="2"
                             aria-label="reject-mesin"
                             name="forming_prod_reject_mesin"
@@ -281,6 +346,7 @@ const FormingTabsContent = ({
                             type="number"
                             size="sm"
                             min={0}
+                            step="0.1"
                             placeholder="10"
                             aria-label="lantai"
                             name="forming_prod_reject_lantai"
@@ -294,7 +360,7 @@ const FormingTabsContent = ({
                     </Row>
 
                     <Row className="justify-content-end">
-                      <Col sm={3} className="text-end">
+                      <Col sm={4} className="text-end">
                         <Button
                           size="sm"
                           variant="warning"
@@ -331,56 +397,62 @@ const FormingTabsContent = ({
                     eventKey={batch.batch_regis_id}
                     title={`Batch${ind + 1}`}
                   >
-                    {batchFormVal
-                      .filter(
-                        (frm) =>
-                          frm.batch_regis_id === batch.batch_regis_id ||
-                          frm.batch_regis_id === null
-                      )
-                      .map((formVal, indx) => (
-                        <Form.Group
-                          key={indx}
-                          as={Row}
-                          className="mb-3 container"
-                          controlId="Start"
-                        >
-                          <Form.Label column sm="1">
-                            Start
-                          </Form.Label>
-                          <Col sm="3">
-                            <FormControl
-                              type={formVal.standar_form_tipe}
-                              size="sm"
-                              placeholder="Start"
-                              aria-label="Start"
-                              disabled={formVal.forming_batch_prod_flag === 'Y'}
-                              name={formVal.standar_form_id}
-                              defaultValue={formVal.standar_form_value}
-                              onChange={(e) =>
-                                handleInputBatchVal(
-                                  e,
-                                  batch.batch_regis_id,
-                                  formingProdId
-                                )
-                              }
-                              aria-describedby="start-ops"
-                            />
-                          </Col>
-                          <Col>
-                            <Button
-                              size="sm"
-                              id={'button' + batch.batch_regis_id}
-                              variant="primary"
-                              disabled={formVal.forming_batch_prod_flag === 'Y'}
-                              onClick={() =>
-                                handleBatchFlagh(batch.batch_regis_id)
-                              }
+                    <Row className="container">
+                      {batchFormVal
+                        .filter((frm) => frm.standar_form_section !== 'result')
+                        .map((formVal, indx) => (
+                          <Col sm={4} key={indx}>
+                            <Form.Group
+                              as={Row}
+                              controlId={formVal.standar_form_param}
                             >
-                              Save
-                            </Button>
+                              <Form.Label className="text-end" column sm="6">
+                                {formVal.standar_form_param}
+                              </Form.Label>
+                              <Col sm="6">
+                                <FormControl
+                                  type={formVal.standar_form_tipe}
+                                  size="sm"
+                                  placeholder=""
+                                  aria-label={formVal.standar_form_param}
+                                  disabled={
+                                    formVal.forming_batch_prod_flag === 'Y'
+                                  }
+                                  name={formVal.standar_form_id}
+                                  defaultValue={formVal.standar_form_value}
+                                  onChange={(e) =>
+                                    handleInputBatchVal(
+                                      e,
+                                      batch.batch_regis_id,
+                                      formingProdId
+                                    )
+                                  }
+                                  aria-describedby="start-ops"
+                                />
+                              </Col>
+                            </Form.Group>
                           </Col>
-                        </Form.Group>
-                      ))}
+                        ))}
+                    </Row>
+                    <Row className="justify-content-end">
+                      <Col sm={2} className="text-end">
+                        {batchFormVal.length !== 0 ? (
+                          <Button
+                            size="sm"
+                            id={'button' + batch.batch_regis_id}
+                            variant="primary"
+                            // disabled={formVal.forming_batch_prod_flag === 'Y'}
+                            onClick={() =>
+                              handleBatchFlagh(batch.batch_regis_id)
+                            }
+                          >
+                            Save
+                          </Button>
+                        ) : (
+                          ''
+                        )}
+                      </Col>{' '}
+                    </Row>
                   </Tab>
                 ))}
             </Tabs>

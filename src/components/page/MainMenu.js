@@ -1,5 +1,7 @@
 import React from 'react';
-import { FcComboChart, FcDeployment } from 'react-icons/fc';
+import { FcComboChart, FcDeployment, FcServices } from 'react-icons/fc';
+import { RiAlarmWarningFill } from 'react-icons/ri';
+
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import imgMixer from '../partial/iconMixer.ico';
@@ -32,7 +34,10 @@ const MainMenu = () => {
                   </Row>
                   <Row>
                     <Col className="text-center">
-                      <div className="btn btn-primary  btn-sm rounded-pill">
+                      <div
+                        style={{ color: '#0d6efd' }}
+                        className="btn fw-bold fs-5   btn-sm rounded-pill"
+                      >
                         Dashboards
                       </div>
                     </Col>
@@ -58,7 +63,10 @@ const MainMenu = () => {
                   </Row>
                   <Row>
                     <Col className="text-center">
-                      <div className="btn btn-danger  btn-sm rounded-pill">
+                      <div
+                        style={{ color: '#dc3545' }}
+                        className="btn fw-bold fs-5   btn-sm rounded-pill"
+                      >
                         Mixer
                       </div>
                     </Col>
@@ -73,7 +81,30 @@ const MainMenu = () => {
           <Col className="mb-3" xs={6} md={3}>
             <Card className="border-0 shadow">
               <Card.Body>
-                <Link to="/mainmenu">
+                <Link to="/forming/report">
+                  <Row>
+                    <Col className="text-center">
+                      <FcServices size={80} />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="text-center">
+                      <div
+                        style={{ color: '#fd7e14' }}
+                        className="btn fw-bold fs-5   btn-sm rounded-pill"
+                      >
+                        Forming
+                      </div>
+                    </Col>
+                  </Row>
+                </Link>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col className="mb-3" xs={6} md={3}>
+            <Card className="border-0 shadow">
+              <Card.Body>
+                <Link to="/oven/report">
                   <Row>
                     <Col className="text-center">
                       <img
@@ -87,10 +118,35 @@ const MainMenu = () => {
                   <Row>
                     <Col className="text-center">
                       <div
-                        to="/mainmenu"
-                        className="btn btn-secondary  btn-sm rounded-pill"
+                        style={{ color: '#adb5bd' }}
+                        className="btn fw-bold fs-5 btn-sm rounded-pill"
                       >
-                        Forming & Oven
+                        Oven
+                      </div>
+                    </Col>
+                  </Row>
+                </Link>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center">
+          <Col className="mb-3" xs={6} md={3}>
+            <Card className="border-0 shadow">
+              <Card.Body>
+                <Link to="/downtime">
+                  <Row>
+                    <Col className="text-center">
+                      <RiAlarmWarningFill color="#dc3545" size={80} />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="text-center">
+                      <div
+                        style={{ color: '#dc3545' }}
+                        className="btn fw-bold fs-5   btn-sm rounded-pill"
+                      >
+                        Downtime
                       </div>
                     </Col>
                   </Row>
@@ -109,7 +165,10 @@ const MainMenu = () => {
                   </Row>
                   <Row>
                     <Col className="text-center">
-                      <div className="btn btn-warning btn-sm rounded-pill">
+                      <div
+                        style={{ color: '#ffc107' }}
+                        className="btn fw-bold fs-5   btn-sm rounded-pill"
+                      >
                         Packing
                       </div>
                     </Col>

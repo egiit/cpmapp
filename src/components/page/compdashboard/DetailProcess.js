@@ -1,159 +1,128 @@
-import React from 'react';
-import { Row, Col, Table, Card } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Table, Card } from 'react-bootstrap';
+import { DashboardContex } from '../provider/Dashboard.provider';
+import Moment from 'react-moment';
+
 const DetailProcess = () => {
+  const { state } = useContext(DashboardContex);
+
   return (
-    <div id="detailprocess">
-      <Row className="mt-4 pb-4">
-        <Col sm={12} md={4} className="mb-3">
-          <Row>
-            <Col>
-              <Card className="border-0 shadow mb-3">
-                <Card.Body>
-                  <Table responsive hover className="table-borderless">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Product</th>
-                        <th>Batch</th>
-                        <th>Finish Good</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Malkist Lemon</td>
-                        <td>11</td>
-                        <td>990</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Malkist Gula</td>
-                        <td>11</td>
-                        <td>836</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Malkist Kemensos</td>
-                        <td>2</td>
-                        <td>3650</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col>
-              <Card className="border-0 shadow">
-                <Card.Body>
-                  <Table responsive hover className="table-borderless">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Product</th>
-                        <th>Batch</th>
-                        <th>Finish Good</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Malkist Lemon</td>
-                        <td>11</td>
-                        <td>990</td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Malkist Gula</td>
-                        <td>11</td>
-                        <td>836</td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Malkist Kemensos</td>
-                        <td>2</td>
-                        <td>3650</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Col>
-        <Col sm={12} md={8} className="">
-          <Card className="border-0 shadow">
-            <Card.Body>
-              <Table responsive hover className="table-borderless">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Shift</th>
-                    <th>Leader</th>
-                    <th>Product</th>
-                    <th>Batch</th>
-                    <th>Dough</th>
-                    <th>Spray Oil</th>
-                    <th>Krim</th>
-                    <th>Baking Loss</th>
-                    <th>Reject Dough</th>
-                    <th>Reject Biskuit</th>
-                    <th>Reject Krim</th>
-                    <th>FG</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Shift 1</td>
-                    <td>Dadang</td>
-                    <td>Malkist Lemon</td>
-                    <td>11</td>
-                    <td>990</td>
-                    <td>990</td>
-                    <td>990</td>
-                    <td>990</td>
-                    <td>990</td>
-                    <td>990</td>
-                    <td>990</td>
-                    <td>990</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Malkist Gula</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>836</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Malkist Kemensos</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>3650</td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+    <>
+      <Card className="border-0 shadow">
+        <Card.Body>
+          <div className="table-responsive">
+            <Table size="sm" bordered responsive hover>
+              <thead>
+                <tr className="align-middle text-center">
+                  <th rowSpan={2}>#</th>
+                  <th rowSpan={2}>Product</th>
+                  <th colSpan={5}>Mixer</th>
+                  <th colSpan={3}>Forming</th>
+                  <th>Oven</th>
+                  <th rowSpan={2}>Target Time</th>
+                  <th rowSpan={2}>Batch Time</th>
+                  <th rowSpan={2}>Var Time</th>
+                  <th rowSpan={2}>Eff</th>
+                </tr>
+                <tr>
+                  <th>Shift</th>
+                  <th>Start</th>
+                  <th>End</th>
+                  <th>T.Time</th>
+                  <th>Transfer</th>
+                  <th>Start</th>
+                  <th>Finish</th>
+                  <th>T.Time</th>
+                  <th>Baking Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {state.allBatchTrack
+                  .filter((btch) => btch.batch_regis_start_time !== null)
+                  .map((batch, i) => (
+                    <tr key={i} className="text-center align-middle">
+                      <td>{i + 1}</td>
+                      <td className="text-start">{batch.product_name}</td>
+                      <td>{batch.mix_shift}</td>
+                      <td>
+                        {batch.batch_regis_start_time ? (
+                          <Moment format="hh:mm">
+                            {batch.batch_regis_start_time}
+                          </Moment>
+                        ) : (
+                          ''
+                        )}
+                      </td>
+                      <td>
+                        {batch.batch_regis_end_time ? (
+                          <Moment format="hh:mm">
+                            {batch.batch_regis_end_time}
+                          </Moment>
+                        ) : (
+                          ''
+                        )}
+                      </td>
+                      <td>
+                        {parseInt(batch.ttime) ? parseInt(batch.ttime) : ''}
+                      </td>
+                      <td>
+                        {batch.batch_regis_transfer_time ? (
+                          <Moment format="hh:mm">
+                            {batch.batch_regis_transfer_time}
+                          </Moment>
+                        ) : (
+                          ''
+                        )}
+                      </td>
+                      <td>{batch.forming_start}</td>
+                      <td>{batch.forming_finish}</td>
+                      <td>
+                        {parseInt(batch.forming_total)
+                          ? parseInt(batch.forming_total)
+                          : ''}
+                      </td>
+                      <td>{batch.oven_backing}</td>
+                      <td>{parseInt(batch.target_time)}</td>
+                      <td>{parseInt(batch.batch_time)}</td>
+                      <td
+                        className={
+                          parseInt(batch.target_time) -
+                            parseInt(batch.batch_time) <
+                          0
+                            ? 'text-danger'
+                            : 'text-green'
+                        }
+                      >
+                        {batch.oven_backing
+                          ? parseInt(batch.target_time) -
+                            parseInt(batch.batch_time)
+                          : ''}
+                      </td>
+                      <td
+                        className={
+                          parseInt(batch.target_time) -
+                            parseInt(batch.batch_time) <
+                          0
+                            ? 'text-danger'
+                            : 'text-green'
+                        }
+                      >
+                        {batch.oven_backing
+                          ? `${(
+                              (parseInt(batch.target_time) /
+                                parseInt(batch.batch_time)) *
+                              100
+                            ).toFixed(1)}%`
+                          : ''}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+          </div>
+        </Card.Body>
+      </Card>
+    </>
   );
 };
 

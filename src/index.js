@@ -1,25 +1,36 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-bootstrap-tagsinput/dist/index.css';
 import 'bootstrap/dist/js/bootstrap.js';
-// import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js';
 import App from './App';
 import './index.css';
-// import axios from 'axios';
-// import axios from './components/axios/axios.js';
+
 import { AuthProvider } from './components/auth/AuthProvider';
 
 // axios.defaults.withCredentials = false;
 
-ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <BrowserRouter>
+//       <AuthProvider>
+//         <App />
+//       </AuthProvider>
+//     </BrowserRouter>
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// );
+
+const container = document.getElementById('root');
+
+const root = createRoot(container);
+
+root.render(
+  <BrowserRouter>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </BrowserRouter>
 );

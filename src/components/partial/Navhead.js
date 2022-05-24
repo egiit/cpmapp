@@ -32,21 +32,20 @@ const Navhead = () => {
     window.location.reload(false);
   };
 
-  const getRunBatch = async () => {
-    await axios.get(`/mixer/report/${tgl}/%25%25/%25`).then((res) => {
-      const runB = res.data.filter(
-        (bt) =>
-          bt.batch_regis_end_time !== null &&
-          bt.batch_regis_transfer_time !== null
-      ).length;
-
-      setRuningBatch(runB);
-    });
-  };
-
   useEffect(() => {
+    const getRunBatch = async () => {
+      await axios.get(`/mixer/report/${tgl}/%25%25/%25`).then((res) => {
+        const runB = res.data.filter(
+          (bt) =>
+            bt.batch_regis_end_time !== null &&
+            bt.batch_regis_transfer_time !== null
+        ).length;
+
+        setRuningBatch(runB);
+      });
+    };
     getRunBatch();
-  }, []);
+  }, [tgl]);
 
   return (
     <Navbar

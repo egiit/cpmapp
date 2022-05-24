@@ -14,6 +14,11 @@ export const AuthProvider = ({ children }) => {
   const [userDept, setuserDept] = useState('');
   const [userLevel, setuserLevel] = useState('');
 
+  useEffect(() => {
+    refreshToken();
+    chgangeBg();
+  }, [navigate]);
+
   const refreshToken = async () => {
     return await axios
       .get(`/token`)
@@ -31,11 +36,6 @@ export const AuthProvider = ({ children }) => {
         if (error.response) return navigate('/');
       });
   };
-
-  useEffect(() => {
-    refreshToken();
-    chgangeBg();
-  }, [navigate]);
 
   const value = {
     token: token,

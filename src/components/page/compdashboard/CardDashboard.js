@@ -23,7 +23,7 @@ const CardDashboard = () => {
 
   return (
     <>
-      <Row className="mb-3">
+      <Row className="mb-2">
         <Col xs={12} sm={6} xl={3}>
           <Card className="shadow border-0 mb-3">
             <Card.Body className="">

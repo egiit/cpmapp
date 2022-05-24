@@ -19,7 +19,7 @@ export const OvenProvider = ({ children }) => {
     getHeader();
     getProductOven();
     getBatchOven();
-  }, [value]);
+  }, []);
 
   const getHeader = async () => {
     await axios

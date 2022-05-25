@@ -140,9 +140,9 @@ const Dashboard = () => {
             <Col className="mb-3" sm={12} xl={12} xxxl={6}>
               <ColumChart />
             </Col>
-            <Col sm={12} xl={12} xxxl={6} className="mb-3">
+            <Col sm={12} xl={12} xxxl={6}>
               <Accordion>
-                <Accordion.Item eventKey="0">
+                <Accordion.Item className="border-0 shadow" eventKey="0">
                   <Accordion.Header>Batch Total Time Detail</Accordion.Header>
                   <Accordion.Body>
                     <DetailProcess />
@@ -154,8 +154,19 @@ const Dashboard = () => {
         ) : (
           ''
         )}
-        {/* <Row className="mb-3">
-        </Row> */}
+        <Row className="mb-3">
+          <Col className="mb-3">
+            <Accordion>
+              <Accordion.Item className="border-0 shadow" eventKey="0">
+                <Accordion.Header>Reject Detail</Accordion.Header>
+                <Accordion.Body>
+                  {JSON.stringify(state.datTotalReject.dataKeping)}
+                  {JSON.stringify(state.datTotalReject.dataDough)}
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+          </Col>
+        </Row>
       </Container>
     </main>
   );

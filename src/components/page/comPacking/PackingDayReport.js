@@ -9,7 +9,7 @@ const PackingDayReport = () => {
           <h2 className="">Packing</h2>
           <Breadcrumb>
             <Breadcrumb.Item href="" active>
-              Packing Check List
+              Packing Dayily Report
             </Breadcrumb.Item>
           </Breadcrumb>
         </div>

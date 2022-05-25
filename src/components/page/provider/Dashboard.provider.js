@@ -20,10 +20,12 @@ export const ACTION = {
   GET_TOT_TARGET_BATCH: 'getTargetBatch',
   GET_DATA_TOTAL_REJECT: 'getDataTotalReject',
   GET_ACTUAL_QTY_BATCH: 'getActualQtyBatch',
+  FUNC_AUTO_REFRESH: 'refreshActive',
 };
 
 const intialstate = {
   date: GetDate(),
+  countRefresh: 0,
   productByplan: [],
   batchByplan: [],
   actualBatch: [],
@@ -111,6 +113,11 @@ export const DashboardProvider = ({ children }) => {
         return {
           ...intialstate,
           actualQtyBatch: action.payload.data,
+        };
+      case ACTION.FUNC_AUTO_REFRESH:
+        return {
+          ...intialstate,
+          countRefresh: action.payload.count,
         };
       default:
         return state;
@@ -271,7 +278,7 @@ export const DashboardProvider = ({ children }) => {
     getChartFgReworks(state.date);
     getProductsFgReworks(state.date);
     getTotalReject(state.date);
-  }, [state.date]);
+  }, [state.date, state.countRefresh]);
 
   return (
     <DashboardContex.Provider value={{ state, dispatch }}>

@@ -6,6 +6,7 @@ import { flash } from 'react-universal-flash';
 import { AuthContext } from '../auth/AuthProvider';
 import { BiRefresh } from 'react-icons/bi';
 import GetDate from '../page/utilis/GetDate.js';
+import useInterval from 'use-interval';
 
 const Navhead = () => {
   const tgl = GetDate();
@@ -32,19 +33,24 @@ const Navhead = () => {
     window.location.reload(false);
   };
 
-  useEffect(() => {
-    const getRunBatch = async () => {
-      await axios.get(`/mixer/report/${tgl}/%25%25/%25`).then((res) => {
-        const runB = res.data.filter(
-          (bt) =>
-            bt.batch_regis_end_time !== null &&
-            bt.batch_regis_transfer_time !== null
-        ).length;
+  const getRunBatch = async (tgl) => {
+    await axios.get(`/mixer/report/${tgl}/%25%25/%25`).then((res) => {
+      const runB = res.data.filter(
+        (bt) =>
+          bt.batch_regis_end_time !== null &&
+          bt.batch_regis_transfer_time !== null
+      ).length;
 
-        setRuningBatch(runB);
-      });
-    };
-    getRunBatch();
+      setRuningBatch(runB);
+    });
+  };
+
+  useInterval(() => {
+    getRunBatch(tgl);
+  }, 60000);
+
+  useEffect(() => {
+    getRunBatch(tgl);
   }, [tgl]);
 
   return (

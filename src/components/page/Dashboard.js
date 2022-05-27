@@ -9,6 +9,7 @@ import ChartDashboard from './compdashboard/ChartDashboard';
 import DashProgressView from './compdashboard/DashProgressView';
 import DashTableOverview from './compdashboard/DashTableOverview';
 import DetailProcess from './compdashboard/DetailProcess';
+import DetailRejectBatch from './compdashboard/DetailRejectBatch';
 import FgReworkProgres from './compdashboard/FgReworkProgres';
 import HeaderDashboard from './compdashboard/HeaderDashboard';
 import { DashboardContex } from './provider/Dashboard.provider';
@@ -143,7 +144,9 @@ const Dashboard = () => {
             <Col sm={12} xl={12} xxxl={6}>
               <Accordion>
                 <Accordion.Item className="border-0 shadow" eventKey="0">
-                  <Accordion.Header>Batch Total Time Detail</Accordion.Header>
+                  <Accordion.Header className="fs-5">
+                    <span className="fw-bold">Batch Total Time Detail</span>
+                  </Accordion.Header>
                   <Accordion.Body>
                     <DetailProcess />
                   </Accordion.Body>
@@ -158,10 +161,11 @@ const Dashboard = () => {
           <Col className="mb-3">
             <Accordion>
               <Accordion.Item className="border-0 shadow" eventKey="0">
-                <Accordion.Header>Reject Detail</Accordion.Header>
+                <Accordion.Header>
+                  <span className="fw-bold">Reject Detail</span>
+                </Accordion.Header>
                 <Accordion.Body>
-                  {JSON.stringify(state.datTotalReject.dataKeping)}
-                  {JSON.stringify(state.datTotalReject.dataDough)}
+                  <DetailRejectBatch />
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>

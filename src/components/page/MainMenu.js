@@ -157,7 +157,7 @@ const MainMenu = () => {
           <Col className="mb-3" xs={6} md={3}>
             <Card className="border-0 shadow">
               <Card.Body>
-                <Link to="/mainmenu">
+                <Link to="/packing/report">
                   <Row>
                     <Col className="text-center">
                       <FcDeployment size={80} />

@@ -10,16 +10,11 @@ import { FcAreaChart, FcInspection } from 'react-icons/fc';
 import { IconContext } from 'react-icons';
 import { DashboardContex } from '../provider/Dashboard.provider';
 import AnimatedNumbers from 'react-animated-numbers';
+import CheckNilai from '../utilis/CheckNilai';
 
 const CardDashboard = () => {
   const { state } = useContext(DashboardContex);
   // const [num, setNum] = React.useState(331231);
-
-  const checkNilai = (nilai) => {
-    if (!nilai || isNaN(nilai)) return 0;
-
-    return nilai;
-  };
 
   return (
     <>
@@ -56,7 +51,7 @@ const CardDashboard = () => {
                     </Col>
                     <Col xs={7} className="fs-3 fw-bold p-0 align-self-center">
                       <AnimatedNumbers
-                        animateToNumber={checkNilai(
+                        animateToNumber={CheckNilai(
                           state.dataChartFG.totalFG +
                             state.dataChartFgRework.totalFG
                         )}
@@ -76,7 +71,7 @@ const CardDashboard = () => {
                       Rework
                     </Col>
                     <Col xs={7} className="fs-4 fw-bold">
-                      {checkNilai(state.dataChartFgRework.totalFG)}
+                      {CheckNilai(state.dataChartFgRework.totalFG)}
                     </Col>
                   </Row>
                 </Col>
@@ -116,7 +111,7 @@ const CardDashboard = () => {
                     </Col>
                     <Col xs={7} className="fs-3 fw-bold p-0 align-self-center">
                       <AnimatedNumbers
-                        animateToNumber={checkNilai(state.dataChartFG.totalFG)}
+                        animateToNumber={CheckNilai(state.dataChartFG.totalFG)}
                         includeComma
                         configs={(number, index) => {
                           return {
@@ -133,7 +128,7 @@ const CardDashboard = () => {
                       Target
                     </Col>
                     <Col xs={7} className="fs-5 fw-bold">
-                      {checkNilai(state.dataTotalPlanFG)}
+                      {CheckNilai(state.dataTotalPlanFG)}
                     </Col>
                   </Row>
                   <Row>
@@ -144,7 +139,7 @@ const CardDashboard = () => {
                       xs={7}
                       className={`fw-bold ${
                         state.dataChartFG.totalFG -
-                          checkNilai(state.dataTotalPlanFG) <
+                          CheckNilai(state.dataTotalPlanFG) <
                         0
                           ? 'text-danger'
                           : 'text-success'
@@ -218,7 +213,7 @@ const CardDashboard = () => {
                       Target
                     </Col>
                     <Col xs={7} className="fs-5 fw-bold">
-                      {state.actualQtyBatch}
+                      {state.datTotTargetBatch}
                     </Col>
                   </Row>
                   <Row>
@@ -310,9 +305,9 @@ const CardDashboard = () => {
                     </Col>
                     <Col xs={7} className="fs-3 fw-bold align-self-center">
                       <AnimatedNumbers
-                        animateToNumber={checkNilai(
+                        animateToNumber={CheckNilai(
                           state.datTotalReject.totalReject
-                        )}
+                        ).toFixed(2)}
                         includeComma
                         configs={(number, index) => {
                           return {
@@ -329,7 +324,7 @@ const CardDashboard = () => {
                       Keping
                     </Col>
                     <Col xs={7} className="fs-5 fw-bold">
-                      {checkNilai(state.datTotalReject.rejectKeping)}
+                      {CheckNilai(state.datTotalReject.rejectKeping).toFixed(2)}
                     </Col>
                   </Row>
                   <Row>
@@ -337,7 +332,7 @@ const CardDashboard = () => {
                       Dough
                     </Col>
                     <Col xs={7} className="fs-6 fw-bold">
-                      {checkNilai(state.datTotalReject.rejectDough)}
+                      {CheckNilai(state.datTotalReject.rejectDough).toFixed(2)}
                     </Col>
                   </Row>
                 </Col>

@@ -8,6 +8,6 @@ const GetDate = () => {
   return year + '-' + month + '-' + date;
 };
 // const GetDate = () => {
-//   return '2022-05-18';
+//   return '2022-05-26';
 // };
 export default GetDate;

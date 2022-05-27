@@ -56,7 +56,7 @@ export const MixingProvider = ({ children }) => {
     getProductMixer();
     getHeader();
     getBatchMixer();
-  }, [value]);
+  }, [value, date, userId]);
 
   const refreshBatch = async () => {
     return getBatchMixer();

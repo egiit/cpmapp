@@ -10,7 +10,7 @@ import {
   Accordion,
 } from 'react-bootstrap';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
-import { HiOutlineKey } from 'react-icons/hi';
+// import { HiOutlineKey } from 'react-icons/hi';
 import MenutAuth from './compRegister/MenutAuth.js';
 import ModalDelete from './compRegister/ModalDelete.js';
 import ModalSaveAccs from './compRegister/ModalSaveAccs.js';
@@ -27,6 +27,7 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [dept, setDept] = useState(0);
+  const [role, setRole] = useState('');
   const [email, setEmail] = useState('');
   const [checked, setChecked] = useState(true);
   const [active, setActive] = useState(1);
@@ -132,6 +133,7 @@ const Register = () => {
     setUsername('');
     setName('');
     setDept(0);
+    setRole('');
     setEmail('');
     setChecked(true);
     setActive(1);
@@ -156,6 +158,7 @@ const Register = () => {
           USER_NAME: username,
           USER_EMAIL: email,
           USER_DEP: dept,
+          USER_LEVEL: role,
           USER_AKTIF_STATUS: active,
           USER_DELETE_STATUS: 0,
         };
@@ -185,6 +188,7 @@ const Register = () => {
     setUsername(resData.USER_NAME);
     setName(resData.USER_INISIAL);
     setDept(resData.USER_DEP);
+    setRole(resData.USER_LEVEL);
     setEmail(resData.USER_EMAIL);
     setActive(resData.USER_AKTIF_STATUS);
     setPassword('');
@@ -207,6 +211,14 @@ const Register = () => {
       ? e.target.classList.remove('text-muted')
       : e.target.classList.add('text-muted');
     setDept(value);
+  };
+
+  const onChangeRole = (e) => {
+    const value = e.target.value;
+    value !== '0'
+      ? e.target.classList.remove('text-muted')
+      : e.target.classList.add('text-muted');
+    setRole(value);
   };
 
   const onChangeEmail = (e) => {
@@ -241,11 +253,11 @@ const Register = () => {
     setarrNewMenu([]);
   };
 
-  const userAccessMen = (id) => {
-    resetMenuArr();
-    setidUserAccess(id);
-    getMenuAccess(id);
-  };
+  // const userAccessMen = (id) => {
+  //   resetMenuArr();
+  //   setidUserAccess(id);
+  //   getMenuAccess(id);
+  // };
 
   const saveResultbtn = () => {
     const arrNewAccs = [];
@@ -402,6 +414,35 @@ const Register = () => {
                             </Form.Control.Feedback>
                           </Col>
                         </Form.Group>
+                        <Form.Group
+                          as={Row}
+                          className="mb-3"
+                          controlId="forRole"
+                        >
+                          <Form.Label size="sm" column sm="4">
+                            Role
+                          </Form.Label>
+                          <Col sm={8}>
+                            <Form.Select
+                              size="sm"
+                              aria-label="select dept"
+                              className="text-muted"
+                              onChange={onChangeRole}
+                              value={role}
+                            >
+                              <option value="0">Select Role</option>
+                              <option key={1} value="ADM">
+                                ADM
+                              </option>
+                              <option key={2} value="SPV">
+                                SPV
+                              </option>
+                              <option key={3} value="admin">
+                                ADMINISTRATOR
+                              </option>
+                            </Form.Select>
+                          </Col>
+                        </Form.Group>
                         <Form.Group as={Row}>
                           <Form.Label size="sm" column sm="4">
                             Status Active
@@ -465,6 +506,7 @@ const Register = () => {
                           <th>Username</th>
                           <th>Name</th>
                           <th>Dept</th>
+                          <th>Role</th>
                           <th>Email</th>
                           <th>Status</th>
                           <th>Action</th>
@@ -486,6 +528,11 @@ const Register = () => {
                                 <td>{user.USER_INISIAL}</td>
                                 <td>
                                   {user.USER_DEP === 0 ? '-' : user.USER_DEP}
+                                </td>
+                                <td>
+                                  {user.USER_LEVEL === null
+                                    ? '-'
+                                    : user.USER_LEVEL}
                                 </td>
                                 <td>{user.USER_EMAIL}</td>
                                 <td>
@@ -511,13 +558,13 @@ const Register = () => {
                                     <AiOutlineDelete />
                                   </Button>
 
-                                  <Button
+                                  {/* <Button
                                     size="sm"
                                     variant="primary"
                                     onClick={() => userAccessMen(user.USER_ID)}
                                   >
                                     <HiOutlineKey />
-                                  </Button>
+                                  </Button> */}
                                 </td>
                               </tr>
                             );

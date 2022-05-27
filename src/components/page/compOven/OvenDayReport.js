@@ -28,16 +28,16 @@ const OvenDayReport = () => {
   const [listSelectProduct, setlistSelectProduct] = useState([]);
 
   useEffect(() => {
-    getRepProductList();
-    getHeadersForm();
-    getRepBatchList();
+    getRepProductList(date);
+    getHeadersForm(date);
+    getRepBatchList(date);
     getRepStandarForm();
-    getRepBatchValue();
-    getRepProdInfo();
+    getRepBatchValue(date);
+    getRepProdInfo(date);
     // getRepProdCheck();
   }, [date]);
 
-  const getHeadersForm = async () => {
+  const getHeadersForm = async (date) => {
     axios
       .get(`/header/report/${date}/2`)
       .then((response) => {
@@ -48,7 +48,7 @@ const OvenDayReport = () => {
   };
 
   // function get API Report List Product berdasarkan Shift
-  const getRepProductList = async () => {
+  const getRepProductList = async (date) => {
     axios
       .get(`/oven/report/product/${date}`)
       .then((response) => {
@@ -65,7 +65,7 @@ const OvenDayReport = () => {
   };
 
   //Ambil Product info Operational
-  const getRepProdInfo = async () => {
+  const getRepProdInfo = async (date) => {
     axios
       .get(`oven//report/product-info/${date}`)
       .then((response) => setProCheckList(response.data))
@@ -73,7 +73,7 @@ const OvenDayReport = () => {
   };
 
   //Ambil List Batch
-  const getRepBatchList = async () => {
+  const getRepBatchList = async (date) => {
     axios
       .get(`/oven/report/batch-list/${date}`)
       .then((response) => setBatchList(response.data))
@@ -91,7 +91,7 @@ const OvenDayReport = () => {
   };
 
   //untuk get form with value
-  const getRepBatchValue = async () => {
+  const getRepBatchValue = async (date) => {
     await axios
       .get(`/oven/report/batch/form/${date}`)
       .then((response) => setBatchValue(response.data))

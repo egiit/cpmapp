@@ -21,6 +21,7 @@ export const ACTION = {
   GET_DATA_TOTAL_REJECT: 'getDataTotalReject',
   GET_ACTUAL_QTY_BATCH: 'getActualQtyBatch',
   FUNC_AUTO_REFRESH: 'refreshActive',
+  GET_REJECT_BATCH: 'getRejectPerBatch',
 };
 
 const intialstate = {
@@ -37,7 +38,14 @@ const intialstate = {
   dataChartBatch: [],
   dataChartFgRework: [],
   dataProductFgRework: [],
-  datTotalReject: [],
+  datTotalReject: {
+    dataDough: [],
+    dataKeping: [],
+    rejectKeping: 0,
+    rejectDough: 0,
+    totalReject: 0,
+  },
+  dataRejectPerBatch: [],
   datTotTargetBatch: 0,
 };
 
@@ -118,6 +126,11 @@ export const DashboardProvider = ({ children }) => {
         return {
           ...intialstate,
           countRefresh: action.payload.count,
+        };
+      case ACTION.GET_REJECT_BATCH:
+        return {
+          ...intialstate,
+          dataRejectPerBatch: action.payload.data,
         };
       default:
         return state;
@@ -266,6 +279,20 @@ export const DashboardProvider = ({ children }) => {
       });
   };
 
+  const getRejectBatch = async (date) => {
+    await axios
+      .get(`/dashboards/rejectPerBatch/${date}`)
+      .then((response) => {
+        dispatch({
+          type: ACTION.GET_REJECT_BATCH,
+          payload: { data: response.data },
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
   const [state, dispatch] = useReducer(reducer, intialstate);
 
   useEffect(() => {
@@ -278,6 +305,7 @@ export const DashboardProvider = ({ children }) => {
     getChartFgReworks(state.date);
     getProductsFgReworks(state.date);
     getTotalReject(state.date);
+    getRejectBatch(state.date);
   }, [state.date, state.countRefresh]);
 
   return (

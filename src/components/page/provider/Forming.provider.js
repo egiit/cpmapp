@@ -15,13 +15,13 @@ export const FormingProvider = ({ children }) => {
   const [prodCheck, setProdCheck] = useState({});
 
   useEffect(() => {
-    getProdCheck();
-    getHeader();
-    getProductForming();
-    getBatchForming();
-  }, [value]);
+    getProdCheck(date);
+    getHeader(date, userId);
+    getProductForming(date);
+    getBatchForming(date);
+  }, [value, userId, date]);
 
-  const getHeader = async () => {
+  const getHeader = async (date, userId) => {
     await axios
       .get(`header/${userId}/${date}`)
       .then((response) => {
@@ -32,7 +32,7 @@ export const FormingProvider = ({ children }) => {
       });
   };
 
-  const getProductForming = async () => {
+  const getProductForming = async (date) => {
     await axios
       .get(`/forming/product/${date}`)
       .then((response) => {
@@ -44,7 +44,7 @@ export const FormingProvider = ({ children }) => {
       });
   };
 
-  const getBatchForming = async () => {
+  const getBatchForming = async (date) => {
     await axios
       .get(`/forming/batch/${date}`)
       .then((response) => {
@@ -56,7 +56,7 @@ export const FormingProvider = ({ children }) => {
       });
   };
 
-  const getProdCheck = async () => {
+  const getProdCheck = async (date) => {
     await axios
       .get(`/forming/product-check/${date}`)
       .then((response) => {

@@ -15,13 +15,13 @@ export const OvenProvider = ({ children }) => {
   const [prodCheck, setProdCheck] = useState({});
 
   useEffect(() => {
-    getProdCheck();
-    getHeader();
-    getProductOven();
-    getBatchOven();
-  }, [value]);
+    getProdCheck(date);
+    getHeader(date, userId);
+    getProductOven(date);
+    getBatchOven(date);
+  }, [value, date, userId]);
 
-  const getHeader = async () => {
+  const getHeader = async (date, userId) => {
     await axios
       .get(`header/${userId}/${date}`)
       .then((response) => {
@@ -32,7 +32,7 @@ export const OvenProvider = ({ children }) => {
       });
   };
 
-  const getProductOven = async () => {
+  const getProductOven = async (date) => {
     await axios
       .get(`/forming/product/${date}`)
       .then((response) => {
@@ -44,7 +44,7 @@ export const OvenProvider = ({ children }) => {
       });
   };
 
-  const getBatchOven = async () => {
+  const getBatchOven = async (date) => {
     await axios
       .get(`/oven/batch-list/${date}`)
       .then((response) => {
@@ -56,7 +56,7 @@ export const OvenProvider = ({ children }) => {
       });
   };
 
-  const getProdCheck = async () => {
+  const getProdCheck = async (date) => {
     await axios
       .get(`/oven/product-check/${date}`)
       .then((response) => {
@@ -72,7 +72,7 @@ export const OvenProvider = ({ children }) => {
     header: header,
     userId: userId,
     prodCheck: prodCheck,
-    refreshBatch: () => getBatchOven(),
+    refreshBatch: () => getBatchOven(date),
   };
 
   return <OvenContex.Provider value={valued}>{children}</OvenContex.Provider>;

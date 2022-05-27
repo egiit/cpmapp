@@ -18,7 +18,7 @@ const CardDowntime = () => {
 
   const [downtimeList, setDowntimeList] = useState([]);
 
-  const getDowntimeList = async () => {
+  const getDowntimeList = async (date) => {
     await axios
       .get(`/downtime/list/${date}%25`)
       .then((response) => setDowntimeList(response.data))
@@ -26,9 +26,9 @@ const CardDowntime = () => {
   };
 
   useEffect(() => {
-    getDowntimeList();
+    getDowntimeList(date);
     // getDowntime();
-  }, []);
+  }, [date]);
 
   // function get list downtime
   // const getDowntime = async () => {

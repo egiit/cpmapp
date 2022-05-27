@@ -1,59 +1,115 @@
-import React, { createContext, useEffect } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 // import { AuthContext } from '../../auth/AuthProvider.js';
-// import axios from '../../axios/axios.js';
-// import GetDate from '../utilis/GetDate.js';
+import axios from '../../axios/axios.js';
+import GetDate from '../utilis/GetDate.js';
 
 export const PackingContext = createContext(null);
 
+export const ACTION = {
+  CHANGE_DATE: 'changeDate',
+  GET_DATA_PRODUKSI: 'getDataProduksi',
+  GET_DATA_HOLD: 'getDataHold',
+  GET_DATA_REWORK: 'getDataRework',
+  GET_DATA_REJECT: 'getDataReject',
+};
+
+const intialstate = {
+  date: GetDate(),
+  dataProd: [],
+  dataHoldProd: [],
+  dataRework: [],
+  dataReject: [],
+};
+
 export const PackingProvider = ({ children }) => {
-  // const date = GetDate();
   // const { value } = useContext(AuthContext);
   // const { userId } = value;
-  // const [ovenProdData, setovenProdData] = useState([]);
-  // const [batchData, setbatchData] = useState([]);
-  // const [header, setHeader] = useState({});
-  // const [prodCheck, setProdCheck] = useState({});
+
+  const reducer = (intialstate, action) => {
+    switch (action.type) {
+      case ACTION.CHANGE_DATE:
+        return { ...intialstate, date: action.payload.date };
+      case ACTION.GET_DATA_PRODUKSI:
+        return { ...intialstate, dataProd: action.payload.data };
+      case ACTION.GET_DATA_HOLD:
+        return { ...intialstate, dataHoldProd: action.payload.data };
+      case ACTION.GET_DATA_REWORK:
+        return { ...intialstate, dataRework: action.payload.data };
+      case ACTION.GET_DATA_REJECT:
+        return { ...intialstate, dataReject: action.payload.data };
+      default:
+        return state;
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, intialstate);
 
   useEffect(() => {
-    // getProdCheck();
-    // getHeader();
-    // getProductOven();
-    // getBatchOven();
-  }, []);
+    getPackingProd(state.date);
+    getPackingHold(state.date);
+    getPackingRework(state.date);
+    getPackingReject(state.date);
+  }, [state.date]);
 
-  // const getHeader = async () => {
-  //   await axios
-  //     .get(`header/${userId}/${date}`)
-  //     .then((response) => {
-  //       setHeader(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log('Error Dapatkan Data Shift Header');
-  //     });
-  // };
+  const getPackingProd = async (date) => {
+    await axios
+      .get(`/packing/dataproduksi/${date}/PRODUCTION`)
+      .then((response) => {
+        dispatch({
+          type: ACTION.GET_DATA_PRODUKSI,
+          payload: { data: response.data },
+        });
+      })
+      .catch((error) => {
+        console.log('Error Dapatkan Data Packing', error.message);
+      });
+  };
 
-  // const getProductPacking = async () => {
-  //   await axios
-  //     .get(`/forming/product/${date}`)
-  //     .then((response) => {
-  //       // console.log(response.data);
-  //       setovenProdData(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log('error mendapatkan data Produk Oven', error);
-  //     });
-  // };
+  const getPackingHold = async (date) => {
+    await axios
+      .get(`/packing/holdproduksi/${date}`)
+      .then((response) => {
+        dispatch({
+          type: ACTION.GET_DATA_HOLD,
+          payload: { data: response.data },
+        });
+      })
+      .catch((error) => {
+        console.log('Error Dapatkan Data Packing', error.message);
+      });
+  };
 
-  const valued = {
-    // prodOven: ovenProdData,
-    // batchData: batchData,
-    // header: header,
-    // userId: userId,
-    // prodCheck: prodCheck,
-    // refreshBatch: () => getBatchOven(),
+  const getPackingRework = async (date) => {
+    await axios
+      .get(`/packing/dataproduksi/${date}/REWORK`)
+      .then((response) => {
+        dispatch({
+          type: ACTION.GET_DATA_REWORK,
+          payload: { data: response.data },
+        });
+      })
+      .catch((error) => {
+        console.log('Error Dapatkan Data Packing Rework', error.message);
+      });
+  };
+
+  const getPackingReject = async (date) => {
+    await axios
+      .get(`/packing/rejectproduksi/${date}/PRODUCTION`)
+      .then((response) => {
+        dispatch({
+          type: ACTION.GET_DATA_REJECT,
+          payload: { data: response.data },
+        });
+      })
+      .catch((error) => {
+        console.log('Error Dapatkan Data REJECT Packing Rework', error.message);
+      });
   };
 
   return (
-    <PackingContext.Provider value={valued}>{children}</PackingContext.Provider>
+    <PackingContext.Provider value={{ state, dispatch }}>
+      {children}
+    </PackingContext.Provider>
   );
 };

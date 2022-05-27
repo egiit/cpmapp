@@ -12,7 +12,7 @@ const DetailProcess = () => {
         <Table size="sm" bordered responsive hover>
           <thead>
             <tr className="align-middle text-center">
-              <th rowSpan={2}>#</th>
+              <th rowSpan={2}>Batch</th>
               <th rowSpan={2}>Product</th>
               <th colSpan={5}>Mixer</th>
               <th colSpan={3}>Forming</th>

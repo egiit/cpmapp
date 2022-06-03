@@ -30,7 +30,8 @@ const ModalUpdateDowntime = ({
           setstartHandle('');
           break;
         }
-        const timeHandle = moment().format('YYYY/MM/DD hh:mm:ss');
+        console.log(moment());
+        const timeHandle = moment().format('YYYY/MM/DD HH:mm:ss');
         setstartHandle(timeHandle);
         break;
       case 'clear':
@@ -38,7 +39,8 @@ const ModalUpdateDowntime = ({
           setclearDowntime('');
           break;
         }
-        const timeClear = moment().format('YYYY/MM/DD hh:mm:ss');
+        console.log(moment());
+        const timeClear = moment().format('YYYY/MM/DD HH:mm:ss');
         setclearDowntime(timeClear);
         break;
       case 'remark':
@@ -80,17 +82,15 @@ const ModalUpdateDowntime = ({
   };
 
   useEffect(() => {
-    console.log(startChecked);
-    console.log(endChecked);
     setfixremarkDown(dataUpdate.downtime_fix_remark);
     if (dataUpdate.downtime_repair) {
       setstartHandle(
-        moment(dataUpdate.downtime_repair).format('YYYY/MM/DD hh:mm:ss')
+        moment(dataUpdate.downtime_repair).format('YYYY/MM/DD HH:mm:ss')
       );
     }
     if (dataUpdate.downtime_end) {
       setclearDowntime(
-        moment(dataUpdate.downtime_end).format('YYYY/MM/DD hh:mm:ss')
+        moment(dataUpdate.downtime_end).format('YYYY/MM/DD HH:mm:ss')
       );
     }
   }, []);
@@ -131,7 +131,7 @@ const ModalUpdateDowntime = ({
                     <tr>
                       <td className="fw-bold">Start Time</td>
                       <td>
-                        <Moment format="YYYY/MM/DD hh:mm:ss">
+                        <Moment format="YYYY/MM/DD HH:mm:ss">
                           {dataUpdate.downtime_start}
                         </Moment>
                       </td>
@@ -205,7 +205,10 @@ const ModalUpdateDowntime = ({
                       <td className="fw-bold">Handle T.Time</td>
                       <td>
                         {clearDowntime !== null ? (
-                          <Moment duration={startHandle} date={clearDowntime} />
+                          <Moment
+                            duration={moment(startHandle).toISOString()}
+                            date={moment(clearDowntime).toISOString()}
+                          />
                         ) : (
                           ''
                         )}
@@ -216,8 +219,10 @@ const ModalUpdateDowntime = ({
                       <td>
                         {clearDowntime !== null ? (
                           <Moment
-                            duration={dataUpdate.downtime_start}
-                            date={clearDowntime}
+                            duration={moment(
+                              dataUpdate.downtime_start
+                            ).toISOString()}
+                            date={moment(clearDowntime).toISOString()}
                           />
                         ) : (
                           ''

@@ -85,7 +85,7 @@ const DetailProcess = () => {
                       parseInt(batch.target_time) - parseInt(batch.batch_time) <
                       0
                         ? 'text-danger'
-                        : 'text-green'
+                        : 'text-success'
                     }
                   >
                     {batch.oven_backing
@@ -97,7 +97,7 @@ const DetailProcess = () => {
                       parseInt(batch.target_time) - parseInt(batch.batch_time) <
                       0
                         ? 'text-danger'
-                        : 'text-green'
+                        : 'text-success'
                     }
                   >
                     {batch.oven_backing

@@ -437,6 +437,9 @@ const Register = () => {
                               <option key={2} value="SPV">
                                 SPV
                               </option>
+                              <option key={2} value="MHC">
+                                MECHANIC
+                              </option>
                               <option key={3} value="admin">
                                 ADMINISTRATOR
                               </option>

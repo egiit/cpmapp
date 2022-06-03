@@ -6,18 +6,21 @@ import LineChart from './apexChart/LineChart';
 
 import CardDashboard from './compdashboard/CardDashboard';
 import ChartDashboard from './compdashboard/ChartDashboard';
+import ChartProdTime from './compdashboard/ChartProdTime';
 import DashProgressView from './compdashboard/DashProgressView';
 import DashTableOverview from './compdashboard/DashTableOverview';
 import DetailProcess from './compdashboard/DetailProcess';
 import DetailRejectBatch from './compdashboard/DetailRejectBatch';
 import FgReworkProgres from './compdashboard/FgReworkProgres';
 import HeaderDashboard from './compdashboard/HeaderDashboard';
+import TableProdTime from './compdashboard/TableProdTime';
 import { DashboardContex } from './provider/Dashboard.provider';
 // import { AuthContext } from '../../App';
 
 const Dashboard = () => {
   const { state } = useContext(DashboardContex);
   const [tableOverview, settableOverview] = useState(false);
+  const [tableViewProdTime, settableViewProdTime] = useState(false);
   const [colTblO, setcolTblO] = useState(4);
   const [colChart, setcolChart] = useState(8);
 
@@ -30,6 +33,10 @@ const Dashboard = () => {
       setcolTblO(5);
       setcolChart(7);
     }
+  };
+
+  const handlTblProdTime = (e) => {
+    settableViewProdTime(e.target.checked);
   };
 
   return (
@@ -47,49 +54,88 @@ const Dashboard = () => {
           </h5>
         </div>
         {state.dataPlanFG.length !== 0 ? (
-          <Row>
-            <Col
-              className="order-sm-2 order-xl-1 mb-3"
-              xs={12}
-              md={5}
-              xl={colTblO}
-            >
-              <Card className="border-0 shadow">
-                <Card.Body>
-                  <Row className="justify-content-between mb-2">
-                    <Col sm={8} className="fw-bold text-start">
-                      Production Progress
-                    </Col>
-                    <Col sm={2} className="text-end me-2">
-                      <div className="form-check form-switch text-end">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          id="tableSwitch"
-                          onChange={(e) => handlTblOv(e)}
-                          aria-checked
-                        ></input>
-                        <label className="form-check-label">
-                          <BsTable />
-                        </label>
-                      </div>
-                    </Col>
-                  </Row>
-                  {tableOverview ? <DashTableOverview /> : <DashProgressView />}
-                </Card.Body>
-              </Card>
-            </Col>
+          <>
+            <Row>
+              <Col
+                className="order-sm-2 order-xl-1 mb-3"
+                xs={12}
+                md={5}
+                xl={colTblO}
+              >
+                <Card className="border-0 shadow">
+                  <Card.Body>
+                    <Row className="justify-content-between mb-2">
+                      <Col sm={8} className="fw-bold text-start">
+                        Production Progress
+                      </Col>
+                      <Col sm={2} className="text-end me-2">
+                        <div className="form-check form-switch text-end">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="tableSwitch"
+                            onChange={(e) => handlTblOv(e)}
+                            aria-checked
+                          ></input>
+                          <label className="form-check-label">
+                            <BsTable />
+                          </label>
+                        </div>
+                      </Col>
+                    </Row>
+                    {tableOverview ? (
+                      <DashTableOverview />
+                    ) : (
+                      <DashProgressView />
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
 
-            <Col
-              className="order-sm-1 order-xl-2 mb-3"
-              xs={12}
-              md={7}
-              xl={colChart}
-            >
-              <ChartDashboard />
-            </Col>
-          </Row>
+              <Col
+                className="order-sm-1 order-xl-2 mb-3"
+                xs={12}
+                md={7}
+                xl={colChart}
+              >
+                <ChartDashboard />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Card className="border-0 shadow">
+                  <Card.Body>
+                    <Row className="justify-content-between mb-2">
+                      <Col sm={9} className="fw-bold text-start">
+                        Production Time (Mixer, Forming, Oven)
+                      </Col>
+                      <Col
+                        sm={2}
+                        md={1}
+                        className="align-content-sm-end pe-md-2"
+                      >
+                        <div className="form-check form-switch">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id="tableSwitch"
+                            onChange={(e) => handlTblProdTime(e)}
+                            aria-checked
+                          ></input>
+                          <label className="form-check-label">
+                            <BsTable />
+                          </label>
+                        </div>
+                      </Col>
+                    </Row>
+                    {tableViewProdTime ? <TableProdTime /> : <ChartProdTime />}
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </>
         ) : (
           ''
         )}

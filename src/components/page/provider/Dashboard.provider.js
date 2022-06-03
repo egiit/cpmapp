@@ -22,6 +22,8 @@ export const ACTION = {
   GET_ACTUAL_QTY_BATCH: 'getActualQtyBatch',
   FUNC_AUTO_REFRESH: 'refreshActive',
   GET_REJECT_BATCH: 'getRejectPerBatch',
+  GET_PROD_TIME: 'getBatchProdTime',
+  GET_CHART_PROD_TIME: 'getChartProdTime',
 };
 
 const intialstate = {
@@ -47,6 +49,8 @@ const intialstate = {
   },
   dataRejectPerBatch: [],
   datTotTargetBatch: 0,
+  dataProdTime: [],
+  dataChartProdTime: {},
 };
 
 export const DashboardProvider = ({ children }) => {
@@ -131,6 +135,16 @@ export const DashboardProvider = ({ children }) => {
         return {
           ...intialstate,
           dataRejectPerBatch: action.payload.data,
+        };
+      case ACTION.GET_PROD_TIME:
+        return {
+          ...intialstate,
+          dataProdTime: action.payload.data,
+        };
+      case ACTION.GET_CHART_PROD_TIME:
+        return {
+          ...intialstate,
+          dataChartProdTime: action.payload.data,
         };
       default:
         return state;
@@ -293,6 +307,34 @@ export const DashboardProvider = ({ children }) => {
       });
   };
 
+  const getProdTime = async (date) => {
+    await axios
+      .get(`/dashboards/ProdTime/${date}`)
+      .then((response) => {
+        dispatch({
+          type: ACTION.GET_PROD_TIME,
+          payload: { data: response.data },
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
+  const getProdTimeChart = async (date) => {
+    await axios
+      .get(`/dashboards/chartProdTime/${date}`)
+      .then((response) => {
+        dispatch({
+          type: ACTION.GET_CHART_PROD_TIME,
+          payload: { data: response.data },
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
   const [state, dispatch] = useReducer(reducer, intialstate);
 
   useEffect(() => {
@@ -306,6 +348,8 @@ export const DashboardProvider = ({ children }) => {
     getProductsFgReworks(state.date);
     getTotalReject(state.date);
     getRejectBatch(state.date);
+    getProdTime(state.date);
+    getProdTimeChart(state.date);
   }, [state.date, state.countRefresh]);
 
   return (

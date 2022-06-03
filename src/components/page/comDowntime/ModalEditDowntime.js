@@ -117,7 +117,7 @@ const ModalEditDowntime = ({
     setfilterBatch(hasilFilter);
     setproductId(dataEdit.product_id);
     setbatchId(dataEdit.batch_regis_id);
-    setstartTime(moment(dataEdit.downtime_start).format('YYYY-MM-DD hh:mm:ss'));
+    setstartTime(moment(dataEdit.downtime_start).format('YYYY-MM-DD HH:mm:ss'));
     settypeDown(dataEdit.downtime_type);
     setremarkDown(dataEdit.downtime_add_remark);
 

@@ -1,12 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Breadcrumb, Row, Form, Col, Card } from 'react-bootstrap';
 import { ACTION, DashboardContex } from '../provider/Dashboard.provider';
 import useInterval from 'use-interval';
+import { useNavigate } from 'react-router-dom';
+import axios from '../../axios/axios';
+import { Blink } from '@bdchauvette/react-blink';
+import { FcApproval, FcCancel } from 'react-icons/fc';
 
 const HeaderDashboard = () => {
   const { state, dispatch } = useContext(DashboardContex);
   const [activeRefresh, setactiveRefresh] = useState(false);
   const [delay, setDelay] = useState(20000);
+  const [downtimeList, setDowntimeList] = useState([]);
+
+  const navigate = useNavigate();
 
   const changeDate = (e) => {
     const { value } = e.target;
@@ -19,12 +26,32 @@ const HeaderDashboard = () => {
     setDelay(value * 1000);
   };
 
+  const getDowntimeList = async (date) => {
+    await axios
+      .get(`/downtime/list/${date}%25`)
+      .then((response) => {
+        if (response.data.length !== 0) {
+          const dwtList = response.data.filter(
+            (dlist) => dlist.downtime_end === null
+          );
+          return setDowntimeList(dwtList);
+        }
+        setDowntimeList(response.data);
+      })
+      .catch((error) => console.log(error.message));
+  };
+
+  useEffect(() => {
+    getDowntimeList(state.date);
+  }, [state.date]);
+
   useInterval(
     () => {
       dispatch({
         type: ACTION.FUNC_AUTO_REFRESH,
         payload: { count: state.countRefresh + 1 },
       });
+      getDowntimeList(state.date);
     },
     activeRefresh ? delay : null
   );
@@ -42,14 +69,45 @@ const HeaderDashboard = () => {
 
   return (
     <>
-      <div className="ms-3" id="titlepage">
-        <h1 className="mt-4">Dashboard</h1>
-        <Breadcrumb>
-          <Breadcrumb.Item href="" active>
-            Production Performance
-          </Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
+      <Row className="mt-4 justify-content-between">
+        <Col xs={8} sm={6}>
+          <div className="ms-3" id="titlepage">
+            <h1>Dashboards</h1>
+            <Breadcrumb>
+              <Breadcrumb.Item href="" active>
+                Production Performance
+              </Breadcrumb.Item>
+            </Breadcrumb>
+          </div>
+        </Col>
+        <Col xs={4} sm={3} lg={2} className=" align-content-center">
+          {downtimeList.length !== 0 ? (
+            <Blink>
+              <div
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate('/downtime')}
+                className="border text-center border-danger border-3 p-1 p-md-3 rounded-1 bg-light shadow fw-bold"
+              >
+                Downtime{' '}
+                <span>
+                  <FcCancel />
+                </span>
+              </div>
+            </Blink>
+          ) : (
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate('/downtime')}
+              className=" text-center border-start border-success border-3 p-1 p-md-3 rounded-1 bg-light fw-bold shadow"
+            >
+              Downtime{' '}
+              <span>
+                <FcApproval />
+              </span>
+            </div>
+          )}
+        </Col>
+      </Row>
       {/* <div>{JSON.stringify(state.batchByplan)}</div> */}
       <Card className="border-0 shadow mb-3">
         <Card.Body className="p-2">

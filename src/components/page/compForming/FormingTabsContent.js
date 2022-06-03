@@ -121,7 +121,9 @@ const FormingTabsContent = ({
 
         flash(ressponse.data.message, 5000, 'success');
       })
-      .catch((error) => flash(error.message, 5000, 'danger'));
+      .catch((error) =>
+        flash('Time Start Tidak Bisa Lebih Kecil', 5000, 'danger')
+      );
   };
 
   //untuk get data saat klik tabs batch

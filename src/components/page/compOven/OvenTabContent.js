@@ -362,7 +362,10 @@ const OvenTabContent = ({
                               (title, ix) => title.standar_form_parent !== null
                             )
                             .map((form, idnx) => (
-                              <th key={idnx}>{form.standar_form_param}</th>
+                              <th key={idnx} className="text-center">
+                                {form.standar_form_param}{' '}
+                                {form.standar_form_initials}
+                              </th>
                             ))}
                         </tr>
                       </thead>

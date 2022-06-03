@@ -47,7 +47,7 @@ const Navhead = () => {
 
   useInterval(() => {
     getRunBatch(tgl);
-  }, 60000);
+  }, 300000);
 
   useEffect(() => {
     getRunBatch(tgl);

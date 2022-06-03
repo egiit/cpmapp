@@ -49,7 +49,7 @@ const ModalDetailDowntime = ({
                   <tr>
                     <td className="fw-bold">Start Time</td>
                     <td>
-                      <Moment format="YYYY/MM/DD hh:mm:ss">
+                      <Moment format="YYYY/MM/DD HH:mm:ss">
                         {dataDetailDowntime.downtime_start}
                       </Moment>
                     </td>
@@ -58,7 +58,7 @@ const ModalDetailDowntime = ({
                     <td className="fw-bold">Fix Time</td>
                     <td>
                       {dataDetailDowntime.downtime_end ? (
-                        <Moment format="YYYY/MM/DD hh:mm:ss">
+                        <Moment format="YYYY/MM/DD HH:mm:ss">
                           {dataDetailDowntime.downtime_end}
                         </Moment>
                       ) : (
